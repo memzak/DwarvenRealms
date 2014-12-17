@@ -8,6 +8,9 @@ namespace DwarvenRealms
     class DwarfWorldMap
     {
         int[,] biomeMap;
+		int[,] evilMap;
+		int[,] temperatureMap;
+		int[,] volcanoMap;
         int[,] elevationMap;
         int[,] smoothedElevationMap;
         int[,] waterMap;
@@ -109,6 +112,46 @@ namespace DwarvenRealms
                     biomeMap[x, y] = BiomeList.GetBiomeIndex(fetchColor(x, y, stride, colorsize, bmpdata));
                 }
             }
+			//Cellular Automata Stuff
+			/*
+			for (int y = 0; y < tempBiomeMap.Height; y++)
+            {
+                for (int x = 0; x < tempBiomeMap.Width; x++)
+                {
+					int orthadj = 0; //Number of neighbours that are similar / the same.
+					int neigh = 4; //Needs at least this many similar neighbours to remain the same. 
+					for (int iy = y-1; iy <= y+1; iy++) 
+					{
+						for (int ix = x-1; ix <= x+1; ix++) 
+						{
+							//If different biome color on original map, treat as a similar neighbour.
+							//The border of the map gets the same treatment.
+							if ((iy < 0) || (iy > tempBiomeMap.Height) || (ix < 0) || (ix > tempBiomeMap.Width)) 
+								orthadj += 1;
+							else if (biomeMap[ix, iy] != biomeMap[x, y])
+								if (fetchColor(ix, iy, stride, colorsize, bmpdata).equals(fetchColor(x, y, stride, colorsize, bmpdata)))
+									orthadj += 1;
+							else if (biomeMap[ix, iy] == biomeMap[x, y])
+								orthadj += 1;
+						}
+					}
+					//Oh dear, it doesn't have enough neighbours to stay the same...
+					if (orthadj < neigh)
+					{
+						for (int iy = y-1; iy <= y+1; iy++) 
+						{
+							for (int ix = x-1; ix <= x+1; ix++) 
+							{ //Finding the most popular biome around. 
+							
+							
+							}
+						}
+					}
+					
+					
+                }
+            }
+			*/
             tempBiomeMap.UnlockBits(bmpdata); // unlocked bitmap
             Console.WriteLine("Loaded biome map sized {0}x{1}", biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
         }
