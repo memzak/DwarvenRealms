@@ -5,12 +5,12 @@ namespace DwarvenRealms
 {
     static class BiomeList
     {
-        public const int brook = 0;
-        public const int stream = 0;
-        public const int minorRiver = 0;
-        public const int river = 0;
-        public const int majorRiver = 0;
-        public const int riverOcean = 0;
+        public const int brook = 7;
+        public const int stream = 7;
+        public const int minorRiver = 7;
+        public const int river = 7;
+        public const int majorRiver = 7;
+        public const int riverOcean = 7;
 
         public static BiomeConversion[] biomes = 
         {
@@ -62,6 +62,16 @@ namespace DwarvenRealms
             }
             return 0;
         }
-
+		
+		//For DEBUGing Cellular Automata
+		public static int GetRandomBiome()
+		{
+			Random rand = new Random();
+			int a = rand.Next(0, BGroupALL.Length);
+			int b = rand.Next(0, BGroupALL[a].Length);
+			int c = rand.Next(0, BGroupALL[a][b].Length);
+			
+			return BGroupALL[a][b][c];
+		}
     }
 }

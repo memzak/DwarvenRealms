@@ -103,58 +103,73 @@ namespace DwarvenRealms
             var bmpdata = tempBiomeMap.LockBits(new Rectangle(0, 0, tempBiomeMap.Width, tempBiomeMap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, tempBiomeMap.PixelFormat);
             int stride = bmpdata.Stride;
             int colorsize = System.Drawing.Bitmap.GetPixelFormatSize(bmpdata.PixelFormat) / 8;
-
+			colorMap = new Color[tempBiomeMap.Width, tempBiomeMap.Height];
             biomeMap = new int[tempBiomeMap.Width, tempBiomeMap.Height];
             for (int y = 0; y < tempBiomeMap.Height; y++)
             {
                 for (int x = 0; x < tempBiomeMap.Width; x++)
                 {
-                    biomeMap[x, y] = BiomeList.GetBiomeIndex(fetchColor(x, y, stride, colorsize, bmpdata));
+					colorMap[x, y] = fetchColor(x, y, stride, colorsize, bmpdata);
+                    //biomeMap[x, y] = BiomeList.GetBiomeIndex(colorMap[x, y]); 
+					biomeMap[x, y] = BiomeListGetRandomBiome(); //DEBUG
                 }
             }
-			//Cellular Automata Stuff
-			/*
-			for (int y = 0; y < tempBiomeMap.Height; y++)
+			//4 = Minimum number of neighbours to stay the same.
+			for (int i = 0; i < 1; i++)
+				iterateBiomeMap(biomeMap, colorMap, 4); 
+
+            tempBiomeMap.UnlockBits(bmpdata); // unlocked bitmap
+            Console.WriteLine("Loaded biome map sized {0}x{1}", biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
+        }
+		
+		public void iterateBiomeMap(int[,] biomeMap, Color[,] colorMap, int neigh)
+		{
+		//Cellular Automata Stuff
+			for (int y = 0; y < bMap.Height; y++)
             {
-                for (int x = 0; x < tempBiomeMap.Width; x++)
+                for (int x = 0; x < bMap.Width; x++)
                 {
-					int orthadj = 0; //Number of neighbours that are similar / the same.
-					int neigh = 4; //Needs at least this many similar neighbours to remain the same. 
+					int orthadj = 0; 				//Number of neighbours that are similar / the same.
+					int countBiomeNeigh[255] = {0}; //Only 255 different biomes possible.
 					for (int iy = y-1; iy <= y+1; iy++) 
 					{
 						for (int ix = x-1; ix <= x+1; ix++) 
 						{
 							//If different biome color on original map, treat as a similar neighbour.
 							//The border of the map gets the same treatment.
-							if ((iy < 0) || (iy > tempBiomeMap.Height) || (ix < 0) || (ix > tempBiomeMap.Width)) 
+							if ((iy < 0) || (iy > biomeMap.Height) || (ix < 0) || (ix > biomeMap.Width)) 
+							{
 								orthadj += 1;
-							else if (biomeMap[ix, iy] != biomeMap[x, y])
-								if (fetchColor(ix, iy, stride, colorsize, bmpdata).equals(fetchColor(x, y, stride, colorsize, bmpdata)))
+							}
+							else
+							{ //If biome is within bounds...
+								countBiomeNeigh[biomeMap[ix, iy]]++;
+								if (biomeMap[ix, iy] == biomeMap[x, y])
 									orthadj += 1;
-							else if (biomeMap[ix, iy] == biomeMap[x, y])
-								orthadj += 1;
+								else if (biomeMap[ix, iy] != biomeMap[x, y])
+									if (colorMap[ix, iy].equals(colorMap[ix, iy]))
+										orthadj += 1;
+							}
 						}
 					}
 					//Oh dear, it doesn't have enough neighbours to stay the same...
 					if (orthadj < neigh)
 					{
-						for (int iy = y-1; iy <= y+1; iy++) 
+						int temp = -1;
+						int biomeWinner = 0;
+						for (int i = 0; i < 256; i++)
 						{
-							for (int ix = x-1; ix <= x+1; ix++) 
-							{ //Finding the most popular biome around. 
-							
-							
+							if (countBiomeNeigh[i] > temp)
+							{
+								temp = countBiomeNeigh[i];
+								biomeWinner = i;
 							}
-						}
+						} //Wooo, we have a winner for the new biome.
+						biomeMap[x, y] = biomeWinner;
 					}
-					
-					
                 }
             }
-			*/
-            tempBiomeMap.UnlockBits(bmpdata); // unlocked bitmap
-            Console.WriteLine("Loaded biome map sized {0}x{1}", biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
-        }
+		}
 
         public enum InterpolationChoice
         {

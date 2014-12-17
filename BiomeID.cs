@@ -166,14 +166,14 @@ namespace DwarvenRealms
 		//Growthcraft BiomeIDs
 		public int BambooForestGrowthcraft = 170;
 		
-		//BiomeGroups based on type.
+		//BiomeGroups based on type. TODO: Add vanilla biomes into the mix.
 		
 		//Regular Biome Variants
 		public const int[][] BGroupCol = new int[7][];
-        BGroupCol[WaterType] = new int[2] {FrozenOcean};
-		BGroupCol[PlainsType] = new int[4] {Arctic,Arctic,Tundra};
-		BGroupCol[ForestType] = new int[6] {FrostForest,SpruceWoods,Taiga,Taiga};
-		BGroupCol[JungleType] = new int[2] {Taiga};
+        BGroupCol[WaterType] = new int[1] {FrozenOcean};
+		BGroupCol[PlainsType] = new int[3] {Arctic,Arctic,Tundra};
+		BGroupCol[ForestType] = new int[4] {FrostForest,SpruceWoods,Taiga,Taiga};
+		BGroupCol[JungleType] = new int[1] {Taiga};
 		BGroupCol[DesertType] = new int[2] {Arctic,Glacier};
 		BGroupCol[MountainType] = new int[2] {Alps,Glacier};
 		BGroupCol[SwampType] = new int[1] {Wetland};
@@ -181,90 +181,93 @@ namespace DwarvenRealms
 		public const int[][] BGroupMed = new int[7][];
         BGroupMed[WaterType] = new int[5] {Ocean,Ocean,CoralReef,KelpForest,OceanOilField};
         BGroupMed[PlainsType] = new int[13] {Chaparral,Chaparral,FlowerField,Grassland,Meadow,Meadow,Moor,Orchard,Prairie,Scrubland,Shrubland,Thicket,Plains};
-		BGroupMed[ForestType] = new int[13] {BorealForest,CherryBlossomGrove,Grove,MapleWoods,MeadowForest,MysticGrove,OvergrownGreens,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,Forest};
-		BGroupMed[JungleType] = new int[4] {BambooForest,Rainforest,TemperateRainforest,TropicalRainforest,Jungle};
-		BGroupMed[DesertType] = new int[4] {Outback,Steppe,Desert,Desert,DesertOilField};
+		BGroupMed[ForestType] = new int[12] {BorealForest,CherryBlossomGrove,Grove,MapleWoods,MeadowForest,MysticGrove,OvergrownGreens,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,Forest};
+		BGroupMed[JungleType] = new int[5] {BambooForest,Rainforest,TemperateRainforest,TropicalRainforest,Jungle};
+		BGroupMed[DesertType] = new int[5] {Outback,Steppe,Desert,Desert,DesertOilField};
 		BGroupMed[MountainType] = new int[4] {Crag,Highland,Mountain,ExtremeHills};
 		BGroupMed[SwampType] = new int[4] {Bayou,Bog,Wetland,Swamp};
 		
 		public const int[][] BGroupHot = new int[7][];
         BGroupHot[WaterType] = new int[5] {Ocean,Ocean,CoralReef,KelpForest,OceanOilField};
-        BGroupHot[PlainsType] = new int[4] {Brushland,Heathland,Prairie,Scrubland,Shrubland,Thicket,Plains};
-		BGroupHot[ForestType] = new int[4] {BorealForest,Fen,RedwoodForest,SeasonalForest,Woodland};
-		BGroupHot[JungleType] = new int[4] {BambooForest,Rainforest,TemperateRainforest,TropicalRainforest,Jungle};
-		BGroupHot[DesertType] = new int[4] {Outback,Outback,Desert,Desert,DesertOilField};
-		BGroupHot[MountainType] = new int[4] {Canyon,Crag,Highland};
-		BGroupHot[SwampType] = new int[4] {Bayou,Marsh,Sludgepit,Wetland,Swamp};
+        BGroupHot[PlainsType] = new int[7] {Brushland,Heathland,Prairie,Scrubland,Shrubland,Thicket,Plains};
+		BGroupHot[ForestType] = new int[5] {BorealForest,Fen,RedwoodForest,SeasonalForest,Woodland};
+		BGroupHot[JungleType] = new int[5] {BambooForest,Rainforest,TemperateRainforest,TropicalRainforest,Jungle};
+		BGroupHot[DesertType] = new int[5] {Outback,Outback,Desert,Desert,DesertOilField};
+		BGroupHot[MountainType] = new int[3] {Canyon,Crag,Highland};
+		BGroupHot[SwampType] = new int[5] {Bayou,Marsh,Sludgepit,Wetland,Swamp};
 		
 		//Low Vegetation Biome Variants
 		public const int[][] BGroupColLV = new int[7][];
         BGroupColLV[WaterType] = new int[1] {FrozenOcean};
-        BGroupColLV[PlainsType] = new int[4] {Arctic,Arctic};
-		BGroupColLV[ForestType] = new int[4] {FrostForest,Shield,Taiga};
-		BGroupColLV[JungleType] = new int[4] {FrostForest};
-		BGroupColLV[DesertType] = new int[4] {Arctic,Glacier};
-		BGroupColLV[MountainType] = new int[4] {Crag,Glacier};
-		BGroupColLV[SwampType] = new int[4] {Quagmire};
+        BGroupColLV[PlainsType] = new int[2] {Arctic,Arctic};
+		BGroupColLV[ForestType] = new int[3] {FrostForest,Shield,Taiga};
+		BGroupColLV[JungleType] = new int[1] {FrostForest};
+		BGroupColLV[DesertType] = new int[2] {Arctic,Glacier};
+		BGroupColLV[MountainType] = new int[2] {Crag,Glacier};
+		BGroupColLV[SwampType] = new int[1] {Quagmire};
 		
 		public const int[][] BGroupMedLV = new int[7][];
         BGroupMedLV[WaterType] = new int[5] {Ocean,Ocean,CoralReef,KelpForest,OceanOilField};
-        BGroupMedLV[PlainsType] = new int[4] {Field,Grassland,Highland,Shrubland,Steppe,Plains};
-		BGroupMedLV[ForestType] = new int[4] {DeadForest,Grove,MapleWoods,MeadowForest,Orchard,OvergrownGreens,Shield};
-		BGroupMedLV[JungleType] = new int[4] {OvergrownGreens,Rainforest,RedwoodForest,SeasonalForest,Tropics};
-		BGroupMedLV[DesertType] = new int[4] {Desert,Desert,DesertOilField};
-		BGroupMedLV[MountainType] = new int[4] {Crag,Wasteland};
-		BGroupMedLV[SwampType] = new int[4] {DeadSwamp,Marsh,Quagmire};
+        BGroupMedLV[PlainsType] = new int[6] {Field,Grassland,Highland,Shrubland,Steppe,Plains};
+		BGroupMedLV[ForestType] = new int[7] {DeadForest,Grove,MapleWoods,MeadowForest,Orchard,OvergrownGreens,Shield};
+		BGroupMedLV[JungleType] = new int[5] {OvergrownGreens,Rainforest,RedwoodForest,SeasonalForest,Tropics};
+		BGroupMedLV[DesertType] = new int[3] {Desert,Desert,DesertOilField};
+		BGroupMedLV[MountainType] = new int[2] {Crag,Wasteland};
+		BGroupMedLV[SwampType] = new int[3] {DeadSwamp,Marsh,Quagmire};
 		
 		public const int[][] BGroupHotLV = new int[7][];
         BGroupHotLV[WaterType] = new int[5] {Ocean,Ocean,CoralReef,KelpForest,OceanOilField};
-        BGroupHotLV[PlainsType] = new int[4] {Field,Grassland,Highland,Moor,Shrubland,Steppe,Plains};
-		BGroupHotLV[ForestType] = new int[4] {DeadForest,Orchard,OvergrownGreens,SeasonalForest,Shield};
-		BGroupHotLV[JungleType] = new int[4] {RedwoodForest,Tropics};
+        BGroupHotLV[PlainsType] = new int[7] {Field,Grassland,Highland,Moor,Shrubland,Steppe,Plains};
+		BGroupHotLV[ForestType] = new int[5] {DeadForest,Orchard,OvergrownGreens,SeasonalForest,Shield};
+		BGroupHotLV[JungleType] = new int[2] {RedwoodForest,Tropics};
 		BGroupHotLV[DesertType] = new int[4] {Wasteland,Wasteland,Desert,DesertOilField};
-		BGroupHotLV[MountainType] = new int[4] {Canyon,Crag,Wasteland};
-		BGroupHotLV[SwampType] = new int[4] {DeadSwamp,Marsh,Quagmire};
+		BGroupHotLV[MountainType] = new int[3] {Canyon,Crag,Wasteland};
+		BGroupHotLV[SwampType] = new int[3] {DeadSwamp,Marsh,Quagmire};
 		
 		//High Vegetation Biome Variants
 		public const int[][] BGroupColHV = new int[7][];
-        BGroupColHV[WaterType] = new int[4] {FrozenOcean};
-        BGroupColHV[PlainsType] = new int[4] {Tundra};
-		BGroupColHV[ForestType] = new int[4] {ConiferousForestSnow,SpruceWoods};
-		BGroupColHV[JungleType] = new int[4] {SacredSprings};
-		BGroupColHV[DesertType] = new int[4] {Glacier};
-		BGroupColHV[MountainType] = new int[4] {Glacier};
-		BGroupColHV[SwampType] = new int[4] {Wetland};
+        BGroupColHV[WaterType] = new int[1] {FrozenOcean};
+        BGroupColHV[PlainsType] = new int[1] {Tundra};
+		BGroupColHV[ForestType] = new int[2] {ConiferousForestSnow,SpruceWoods};
+		BGroupColHV[JungleType] = new int[1] {SacredSprings};
+		BGroupColHV[DesertType] = new int[1] {Glacier};
+		BGroupColHV[MountainType] = new int[1] {Glacier};
+		BGroupColHV[SwampType] = new int[1] {Wetland};
 		
 		public const int[][] BGroupMedHV = new int[7][];
-        BGroupMedHV[WaterType] = new int[5] {Ocean,CoralReef,CoralReef,KelpForest,KelpForest,OceanOilField};
-        BGroupMedHV[PlainsType] = new int[4] {Brushland,Garden,Heathland,LavenderFields,LavenderFieldsPasture,Thicket};
-		BGroupMedHV[ForestType] = new int[4] {BambooForestGrowthcraft,BorealForest,ConiferousForest,DeciduousForest,JadeCliffs,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,Forest};
-		BGroupMedHV[JungleType] = new int[4] {BambooForestGrowthcraft,BambooForest,FungiForest,SacredSprings,TemperateRainforest,TropicalRainforest,Jungle};
-		BGroupMedHV[DesertType] = new int[4] {LushDesert,Mangrove,Oasis};
-		BGroupMedHV[MountainType] = new int[4] {Highland,Highland,Mountain,Mountain,SacredSprings,Shield,ExtremeHills};
-		BGroupMedHV[SwampType] = new int[4] {Bog,LushSwamp,LushSwamp,Silkglades,Sludgepit,Swamp};
+        BGroupMedHV[WaterType] = new int[6] {Ocean,CoralReef,CoralReef,KelpForest,KelpForest,OceanOilField};
+        BGroupMedHV[PlainsType] = new int[7] {Brushland,Garden,Heathland,LavenderFields,LavenderFields,Pasture,Thicket};
+		BGroupMedHV[ForestType] = new int[10] {BambooForestGrowthcraft,BorealForest,ConiferousForest,DeciduousForest,JadeCliffs,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,Forest};
+		BGroupMedHV[JungleType] = new int[7] {BambooForestGrowthcraft,BambooForest,FungiForest,SacredSprings,TemperateRainforest,TropicalRainforest,Jungle};
+		BGroupMedHV[DesertType] = new int[3] {LushDesert,Mangrove,Oasis};
+		BGroupMedHV[MountainType] = new int[7] {Highland,Highland,Mountain,Mountain,SacredSprings,Shield,ExtremeHills};
+		BGroupMedHV[SwampType] = new int[6] {Bog,LushSwamp,LushSwamp,Silkglades,Sludgepit,Swamp};
 		
 		public const int[][] BGroupHotHV = new int[7][];
-        BGroupHotHV[WaterType] = new nt[5] {Ocean,CoralReef,CoralReef,KelpForest,KelpForest,OceanOilField};
-        BGroupHotHV[PlainsType] = new int[4] {Brushland,Heathland,Prairie,Scrubland,Thicket};
-		BGroupHotHV[ForestType] = new int[4] {BambooForestGrowthcraft,BorealForest,DeciduousForest,Fen,FungiForest,JadeCliffs,RedwoodForest,SeasonalForest};
-		BGroupHotHV[JungleType] = new int[4] {BambooForestGrowthcraft,BambooForest,FungiForest,TemperateRainforest,TropicalRainforest,Tropics,Jungle};
+        BGroupHotHV[WaterType] = new nt[6] {Ocean,CoralReef,CoralReef,KelpForest,KelpForest,OceanOilField};
+        BGroupHotHV[PlainsType] = new int[5] {Brushland,Heathland,Prairie,Scrubland,Thicket};
+		BGroupHotHV[ForestType] = new int[8] {BambooForestGrowthcraft,BorealForest,DeciduousForest,Fen,FungiForest,JadeCliffs,RedwoodForest,SeasonalForest};
+		BGroupHotHV[JungleType] = new int[7] {BambooForestGrowthcraft,BambooForest,FungiForest,TemperateRainforest,TropicalRainforest,Tropics,Jungle};
 		BGroupHotHV[DesertType] = new int[4] {LushDesert,Mangrove,Oasis,Oasis};
 		BGroupHotHV[MountainType] = new int[4] {Canyon,Highland,Mountain,ExtremeHills};
-		BGroupHotHV[SwampType] = new int[4] {Bog,LushSwamp,Silkglades,Sludgepit,Swamp};	
+		BGroupHotHV[SwampType] = new int[5] {Bog,LushSwamp,Silkglades,Sludgepit,Swamp};	
 		
 		//Good Biomes Group
 		public const int[][] BGroupGood = new int[7][];
         BGroupGood[WaterType] = new int[3] {CoralReef,KelpForest,OceanOilField};
-        BGroupGood[PlainsType] = new int[2] {Garden,OriginValley,FlowerField};
+        BGroupGood[PlainsType] = new int[3] {Garden,OriginValley,FlowerField};
 		BGroupGood[ForestType] = new int[4] {MysticGrove,SacredSprings,MagicalForest,FlowerForest};
-		BGroupGood[JungleType] = new int[4] {MagicalForest,Tropics};
+		BGroupGood[JungleType] = new int[2] {MagicalForest,Tropics};
 		BGroupGood[DesertType] = new int[1] {Oasis};
-		BGroupGood[MountainType] = new int[2] {SacredSprings};
-		BGroupGood[SwampType] = new int[4] {Oasis,Tropics};	
+		BGroupGood[MountainType] = new int[1] {SacredSprings};
+		BGroupGood[SwampType] = new int[2] {Oasis,Tropics};	
 		
 		//Misc. Biome Groups
-		public const int[] BGroupEvil = {OminousWoods,Eerie,Taint};
+		public const int[] BGroupEvil = {OminousWoods,Eerie,Taint,Silkglades};
 		public const int[] BGroupVolcano = {Deadlands,Volcano};
+		
+		//Array O' Everything
+		public const int[][][] BGroupALL = {BGroupCol, BGroupMed, BGroupHot, BGroupColLV, BGroupMedLV, BGroupHotLV, BGroupColHV, BGroupMedHV, BGroupHotHV, BGroupGood};
 		
 		//Rules to remember:
 		//Volcano if high volcanism.
