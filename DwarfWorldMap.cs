@@ -15,6 +15,7 @@ namespace DwarvenRealms
         int[,] smoothedElevationMap;
         int[,] waterMap;
         int[,] riverHeightMap;
+        Color[,] colorMap;
 
         // unsafe is needed to use raw pointers.
         // This implementation is not ideal, because before and after calling this function, the user has to manually lock/unlock the bitmap. But there seems to be no other, better, cleaner, more elegant way.
@@ -111,33 +112,33 @@ namespace DwarvenRealms
                 {
 					colorMap[x, y] = fetchColor(x, y, stride, colorsize, bmpdata);
                     //biomeMap[x, y] = BiomeList.GetBiomeIndex(colorMap[x, y]); 
-					biomeMap[x, y] = BiomeListGetRandomBiome(); //DEBUG
+					biomeMap[x, y] = BiomeList.GetRandomBiome(); //DEBUG
                 }
             }
 			//4 = Minimum number of neighbours to stay the same.
 			for (int i = 0; i < 1; i++)
-				iterateBiomeMap(biomeMap, colorMap, 4); 
+                iterateBiomeMap(biomeMap, colorMap, 4, tempBiomeMap.Height, tempBiomeMap.Width); 
 
             tempBiomeMap.UnlockBits(bmpdata); // unlocked bitmap
             Console.WriteLine("Loaded biome map sized {0}x{1}", biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
         }
 		
-		public void iterateBiomeMap(int[,] biomeMap, Color[,] colorMap, int neigh)
+		public void iterateBiomeMap(int[,] biomeMap, Color[,] colorMap, int neigh, int Height, int Width)
 		{
 		//Cellular Automata Stuff
-			for (int y = 0; y < bMap.Height; y++)
+			for (int y = 0; y < Height; y++)
             {
-                for (int x = 0; x < bMap.Width; x++)
+                for (int x = 0; x < Width; x++)
                 {
 					int orthadj = 0; 				//Number of neighbours that are similar / the same.
-					int countBiomeNeigh[255] = {0}; //Only 255 different biomes possible.
+					int[] countBiomeNeigh = new int[255] {0}; //Only 255 different biomes possible.
 					for (int iy = y-1; iy <= y+1; iy++) 
 					{
 						for (int ix = x-1; ix <= x+1; ix++) 
 						{
 							//If different biome color on original map, treat as a similar neighbour.
 							//The border of the map gets the same treatment.
-							if ((iy < 0) || (iy > biomeMap.Height) || (ix < 0) || (ix > biomeMap.Width)) 
+                            if ((iy < 0) || (iy > Height) || (ix < 0) || (ix > Width)) 
 							{
 								orthadj += 1;
 							}
