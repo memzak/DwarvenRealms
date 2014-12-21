@@ -8,14 +8,11 @@ namespace DwarvenRealms
     class DwarfWorldMap
     {
         int[,] biomeMap;
-		int[,] evilMap;
-		int[,] temperatureMap;
-		int[,] volcanoMap;
         int[,] elevationMap;
         int[,] smoothedElevationMap;
         int[,] waterMap;
         int[,] riverHeightMap;
-        Color[,] colorMap;
+        BiomeConversion[,] mapMap;
 
         // unsafe is needed to use raw pointers.
         // This implementation is not ideal, because before and after calling this function, the user has to manually lock/unlock the bitmap. But there seems to be no other, better, cleaner, more elegant way.
@@ -99,43 +96,45 @@ namespace DwarvenRealms
         }
         public void loadBiomeMap(string path)
         {
-            BiomeID biomeid = new BiomeID();
-            biomeid.getBiomeIDs();
+            BiomeID biomeids = new BiomeID();
+            biomeids.getBiomeIDs();
 
             Bitmap tempBiomeMap = (Bitmap)Bitmap.FromFile(path);
             // locking bitmap ...
             var bmpdata = tempBiomeMap.LockBits(new Rectangle(0, 0, tempBiomeMap.Width, tempBiomeMap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, tempBiomeMap.PixelFormat);
             int stride = bmpdata.Stride;
             int colorsize = System.Drawing.Bitmap.GetPixelFormatSize(bmpdata.PixelFormat) / 8;
-			colorMap = new Color[tempBiomeMap.Width, tempBiomeMap.Height];
             biomeMap = new int[tempBiomeMap.Width, tempBiomeMap.Height];
+            mapMap = new BiomeConversion[tempBiomeMap.Width, tempBiomeMap.Height];
             Random biomeRandomizer = new Random();
             for (int y = 0; y < tempBiomeMap.Height; y++)
             {
                 for (int x = 0; x < tempBiomeMap.Width; x++)
                 {
-					colorMap[x, y] = fetchColor(x, y, stride, colorsize, bmpdata);
-                    //biomeMap[x, y] = BiomeList.GetBiomeIndex(colorMap[x, y]); 
-                    biomeMap[x, y] = BiomeList.GetRandomBiome(biomeRandomizer, biomeid); //DEBUG
+                    mapMap[x, y] = BiomeList.ColorMatchBiome(fetchColor(x, y, stride, colorsize, bmpdata), biomeids);
+                    biomeMap[x, y] = mapMap[x, y].getNewBiome(biomeRandomizer, biomeids);
                 }
             }
-			//4 = Minimum number of neighbours to stay the same.
-			for (int i = 0; i < 1; i++)
-                iterateBiomeMap(biomeMap, colorMap, 4); 
+
+            //Neigh = Minimum number of neighbours required to stay the same.
+			for (int i = 0; i < 4; i++)
+                iterateBiomeMap(mapMap, biomeids, 3);
 
             tempBiomeMap.UnlockBits(bmpdata); // unlocked bitmap
             Console.WriteLine("Loaded biome map sized {0}x{1}", biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
 
             //DEBUG DRAWING
-            drawBiomeMap(biomeMap);
+            drawBiomeMap(mapMap);
         }
-		
-		public void iterateBiomeMap(int[,] biomeMap, Color[,] colorMap, int neigh)
+
+        public void iterateBiomeMap(BiomeConversion[,] mapMap, BiomeID biomeids, int neigh)
 		{
 		//Cellular Automata Stuff
-            for (int y = 0; y < biomeMap.GetUpperBound(0); y++)
+            //bool[,] done = new bool[mapMap.GetUpperBound(0),mapMap.GetUpperBound(1)];
+
+            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
             {
-                for (int x = 0; x < biomeMap.GetUpperBound(1); x++)
+                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
                 {
 					int orthadj = 0; 				//Number of neighbours that are similar / the same.
 					int[] countBiomeNeigh = new int[256]; //Only 255 different biomes possible.
@@ -144,18 +143,19 @@ namespace DwarvenRealms
 						for (int ix = x-1; ix <= x+1; ix++) 
 						{
                             //If different biome color on original map, treat as a similar neighbour.
-							//The border of the map gets the same treatment.
-                            if (((iy < 0) || (iy >= biomeMap.GetUpperBound(0))) || ((ix < 0) || (ix >= biomeMap.GetUpperBound(1)))) 
+							//The border it'll more likely turn into Deep Ocean Biomes.
+                            if (((iy < 0) || (iy >= mapMap.GetUpperBound(0))) || ((ix < 0) || (ix >= mapMap.GetUpperBound(1)))) 
 							{
-								orthadj += 1;
+								orthadj -= 1;
+                                countBiomeNeigh[BiomeID.DeepOcean] += 2;
 							}
 							else
 							{ //If biome is within bounds...
-								countBiomeNeigh[biomeMap[ix, iy]]++;
-								if (biomeMap[ix, iy] == biomeMap[x, y])
+                                countBiomeNeigh[mapMap[ix, iy].getBiome()]++;
+                                if (mapMap[ix, iy].getBiome() == mapMap[x, y].getBiome())
 									orthadj += 1;
-								else if (biomeMap[ix, iy] != biomeMap[x, y])
-									if (colorMap[ix, iy] == colorMap[ix, iy])
+                                else if (mapMap[ix, iy].getBiome() != mapMap[x, y].getBiome())
+                                    if (mapMap[ix, iy].getColor() != mapMap[x, y].getColor())
 										orthadj += 1;
 							}
 						}
@@ -173,31 +173,40 @@ namespace DwarvenRealms
 								biomeWinner = i;
 							}
 						} //Wooo, we have a winner for the new biome.
-						biomeMap[x, y] = biomeWinner;
+                        mapMap[x, y].setBiome(biomeWinner);
 					}
                 }
             }
 		}
 
         ///*DRAW BIOMEMAP TO IMAGE FOR DEBUGGING
-        public void drawBiomeMap(int[,] biomeMap)
+        public void drawBiomeMap(BiomeConversion[,] mapMap)
         {
-            Bitmap drawnBiomeMap = new Bitmap(biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
+            Bitmap drawnBiomeMap = new Bitmap(mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
             Color tempColor = new Color();
-            for (int y = 0; y < biomeMap.GetUpperBound(0); y++)
+            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
             {
-                for (int x = 0; x < biomeMap.GetUpperBound(1); x++)
+                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
                 {
-                    tempColor = biomeToColor(biomeMap[x, y]);
+                    tempColor = biomeToColor(mapMap[x, y].getBiome());
                     drawnBiomeMap.SetPixel(x, y, tempColor);
                 }
             }
-            drawnBiomeMap.Save("DEBUG.bmp");
-                
+            drawnBiomeMap.Save("DEBUG1.bmp");
+            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
+            {
+                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
+                {
+                    tempColor = mapMap[x, y].getColor();
+                    drawnBiomeMap.SetPixel(x, y, tempColor);
+                }
+            }
+            drawnBiomeMap.Save("DEBUG2.bmp");
         }
 
         public Color biomeToColor(int biome)
         {
+            biome = (biome * biome * 7) % 256;
             int cred = 0, cgreen = 0, cblue = 0;
             //Messy byte-to-color-stuff.
             if (biome < 40)
@@ -213,7 +222,7 @@ namespace DwarvenRealms
                 cblue = (biome - 69) * 5;
             }
             else if (biome >= 120 && biome < 150)
-            {//25 YELLOWs
+            {//25 YELLOWS
                 cred = (biome - 99) * 5;
                 cgreen = (biome - 99) * 5;
             }
@@ -233,7 +242,6 @@ namespace DwarvenRealms
                 cgreen = (biome - 204) * 5;
                 cblue = (biome - 204) * 5;
             }
-
             return Color.FromArgb(cred, cgreen, cblue);
         }
         //*/

@@ -186,8 +186,8 @@ namespace DwarvenRealms
                     int riverLevel = currentDwarfMap.getRiverLevel((int)Math.Floor(mux + 0.5), (int)Math.Floor(muy + 0.5)) + shift;
                     if (height > maxHeight) maxHeight = height;
                     if (height < minHeight) minHeight = height;
-                    int biomeIndex = currentDwarfMap.getBiome((int)Math.Floor(mux + 0.5), (int)Math.Floor(muy + 0.5));
-                    chunk.Biomes.SetBiome(x, z, biomeIndex);//x, z, BiomeList.biomes[biomeIndex].mineCraftBiome);//OLD STUFF
+                    int biomeID = currentDwarfMap.getBiome((int)Math.Floor(mux + 0.5), (int)Math.Floor(muy + 0.5));
+                    chunk.Biomes.SetBiome(x, z, biomeID);
                     //create bedrock
                     for (int y = 0; y < 2; y++)
                     {
