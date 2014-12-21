@@ -34,7 +34,6 @@ namespace DwarvenRealms
 
         private void MapGenerationWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            BiomeID.getBiomeIDs();
             MapCrafter craft = e.Argument as MapCrafter;
             mapGenerationWorker.ReportProgress(0,"Initializing Minecraft Realm...");
             craft.initializeMinecraftWorld();

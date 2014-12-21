@@ -64,16 +64,14 @@ namespace DwarvenRealms
             return 0;
         }
 		
-		//For DEBUGing Cellular Automata
-		public static int GetRandomBiome()
+		//For DEBUG with Cellular Automata
+		public static int GetRandomBiome(Random rand, BiomeID biomeid)
 		{
-			Random rand = new Random();
+            int a = rand.Next(0, biomeid.BGroupALL.Length);
+            int b = rand.Next(0, biomeid.BGroupALL[a].Length);
+            int c = rand.Next(0, biomeid.BGroupALL[a][b].Length);
 
-			int a = rand.Next(0, BiomeID.BGroupALL.Length);
-            int b = rand.Next(0, BiomeID.BGroupALL[a].Length);
-            int c = rand.Next(0, BiomeID.BGroupALL[a][b].Length);
-
-            return BiomeID.BGroupALL[a][b][c];
+            return biomeid.BGroupALL[a][b][c];
 		}
     }
 }

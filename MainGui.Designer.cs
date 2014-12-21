@@ -704,17 +704,17 @@
             // 
             // elevationMapFileDialog
             // 
-            this.elevationMapFileDialog.FileName = "world_graphic-el-*";
+            this.elevationMapFileDialog.FileName = "*-el.*";
             this.elevationMapFileDialog.Filter = "Image Files(*.BMP;*.PNG)|*.BMP;*.PNG|All files (*.*)|*.*";
             // 
             // elevationWaterMapFileDialog
             // 
-            this.elevationWaterMapFileDialog.FileName = "world_graphic-elw-*";
+            this.elevationWaterMapFileDialog.FileName = "*-elw.*";
             this.elevationWaterMapFileDialog.Filter = "Image Files(*.BMP;*.PNG)|*.BMP;*.PNG|All files (*.*)|*.*";
             // 
             // biomeMapFileDialog
             // 
-            this.biomeMapFileDialog.FileName = "world_graphic-bm-*";
+            this.biomeMapFileDialog.FileName = "*-bm.*";
             this.biomeMapFileDialog.Filter = "Image Files(*.BMP;*.PNG)|*.BMP;*.PNG|All files (*.*)|*.*";
             // 
             // MainGui

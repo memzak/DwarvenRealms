@@ -187,7 +187,7 @@ namespace DwarvenRealms
                     if (height > maxHeight) maxHeight = height;
                     if (height < minHeight) minHeight = height;
                     int biomeIndex = currentDwarfMap.getBiome((int)Math.Floor(mux + 0.5), (int)Math.Floor(muy + 0.5));
-                    chunk.Biomes.SetBiome(x, z, BiomeList.biomes[biomeIndex].mineCraftBiome);
+                    chunk.Biomes.SetBiome(x, z, biomeIndex);//x, z, BiomeList.biomes[biomeIndex].mineCraftBiome);//OLD STUFF
                     //create bedrock
                     for (int y = 0; y < 2; y++)
                     {
