@@ -1,4 +1,5 @@
 ﻿using Substrate;
+using System;
 using System.Drawing;
 
 namespace DwarvenRealms
@@ -67,11 +68,12 @@ namespace DwarvenRealms
 		public static int GetRandomBiome()
 		{
 			Random rand = new Random();
-			int a = rand.Next(0, BGroupALL.Length);
-			int b = rand.Next(0, BGroupALL[a].Length);
-			int c = rand.Next(0, BGroupALL[a][b].Length);
-			
-			return BGroupALL[a][b][c];
+
+			int a = rand.Next(0, BiomeID.BGroupALL.Length);
+            int b = rand.Next(0, BiomeID.BGroupALL[a].Length);
+            int c = rand.Next(0, BiomeID.BGroupALL[a][b].Length);
+
+            return BiomeID.BGroupALL[a][b][c];
 		}
     }
 }

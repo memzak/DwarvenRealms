@@ -131,7 +131,7 @@ namespace DwarvenRealms
                 for (int x = 0; x < Width; x++)
                 {
 					int orthadj = 0; 				//Number of neighbours that are similar / the same.
-					int[] countBiomeNeigh = new int[255] {0}; //Only 255 different biomes possible.
+					int[] countBiomeNeigh = new int[255]; //Only 255 different biomes possible.
 					for (int iy = y-1; iy <= y+1; iy++) 
 					{
 						for (int ix = x-1; ix <= x+1; ix++) 
@@ -148,7 +148,7 @@ namespace DwarvenRealms
 								if (biomeMap[ix, iy] == biomeMap[x, y])
 									orthadj += 1;
 								else if (biomeMap[ix, iy] != biomeMap[x, y])
-									if (colorMap[ix, iy].equals(colorMap[ix, iy]))
+									if (colorMap[ix, iy] == colorMap[ix, iy])
 										orthadj += 1;
 							}
 						}
@@ -160,7 +160,7 @@ namespace DwarvenRealms
 						int biomeWinner = 0;
 						for (int i = 0; i < 256; i++)
 						{
-							if (countBiomeNeigh[i] > temp)
+							if (countBiomeNeigh[i] > temp && countBiomeNeigh != null)
 							{
 								temp = countBiomeNeigh[i];
 								biomeWinner = i;
