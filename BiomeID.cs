@@ -323,7 +323,6 @@ namespace DwarvenRealms
         }
 		//Rules to remember:
 		//Volcano if high volcanism.
-		//Deadlands if REALLY (max) hot.
 		//Good / Evil extremes overrides previous selection.
 		//
 		

@@ -17,42 +17,42 @@ namespace DwarvenRealms
         {
             //TODO: Add Modifiers to Characteristics of Biomes Based on Name
             new BiomeConversion(0,0,0,BiomeID.WaterType,0,0,0,0),               //no biome
-            new BiomeConversion(128,128,128,BiomeID.MountainType,-10,0,0,0),      //mountain
-            new BiomeConversion(0,224,255,BiomeID.WaterType,0,10,0,0,true),      // temperate freshwater lake
+            new BiomeConversion(128,128,128,BiomeID.MountainType,-100,0,0,0),      //mountain
+            new BiomeConversion(0,224,255,BiomeID.WaterType,0,100,0,0,true),      // temperate freshwater lake
             new BiomeConversion(0,192,255,BiomeID.WaterType,0,0,0,0,true),      // temperate brackish lake
-            new BiomeConversion(0,160,255,BiomeID.WaterType,0,10,0,0,true),      // temperate saltwater lake
-            new BiomeConversion(0,96,255,BiomeID.WaterType,25,25,0,0,true),       // tropical freshwater lake
-            new BiomeConversion(0,64,255,BiomeID.WaterType,25,10,0,0,true),       // tropical brackish lake
-            new BiomeConversion(0,32,255,BiomeID.WaterType,25,25,0,0,true),       // tropical saltwater lake
-            new BiomeConversion(0,255,255,BiomeID.WaterType,-50,-50,0,0),           // arctic ocean
-            new BiomeConversion(0,0,255,BiomeID.WaterType,25,25,0,0),             // tropical ocean
+            new BiomeConversion(0,160,255,BiomeID.WaterType,0,100,0,0,true),      // temperate saltwater lake
+            new BiomeConversion(0,96,255,BiomeID.WaterType,250,250,0,0,true),       // tropical freshwater lake
+            new BiomeConversion(0,64,255,BiomeID.WaterType,300,100,0,0,true),       // tropical brackish lake
+            new BiomeConversion(0,32,255,BiomeID.WaterType,250,250,0,0,true),       // tropical saltwater lake
+            new BiomeConversion(0,255,255,BiomeID.WaterType,-500,-400,0,0),           // arctic ocean
+            new BiomeConversion(0,0,255,BiomeID.WaterType,250,250,0,0),             // tropical ocean
             new BiomeConversion(0,128,255,BiomeID.WaterType,0,0,0,0),           // temperate ocean ()
-            new BiomeConversion(64,255,255,BiomeID.DesertType,-50,-50,0,0),         // glacier ()
-            new BiomeConversion(128,255,255,BiomeID.PlainsType,-50,0,0,0),        // tundra ()
-            new BiomeConversion(96,192,128,BiomeID.SwampType,0,0,0,0),          // temperate freshwater swamp ()
-            new BiomeConversion(64,192,128,BiomeID.SwampType,0,0,0,0),          // temperate saltwater swamp ()
-            new BiomeConversion(96,255,128,BiomeID.SwampType,0,25,0,0),          // temperate freshwater marsh ()
-            new BiomeConversion(64,255,128,BiomeID.SwampType,0,25,0,0),          // temperate saltwater marsh ()
-            new BiomeConversion(96,192,64,BiomeID.SwampType,25,0,0,0),           // tropical freshwater swamp ()
-            new BiomeConversion(64,192,64,BiomeID.SwampType,25,0,0,0),           // tropical saltwater swamp ()
+            new BiomeConversion(64,255,255,BiomeID.DesertType,-500,-400,0,0),         // glacier ()
+            new BiomeConversion(128,255,255,BiomeID.PlainsType,-500,50,0,0),        // tundra ()
+            new BiomeConversion(96,192,128,BiomeID.SwampType,0,0,0,50),          // temperate freshwater swamp ()
+            new BiomeConversion(64,192,128,BiomeID.SwampType,0,-50,0,0),          // temperate saltwater swamp ()
+            new BiomeConversion(96,255,128,BiomeID.SwampType,0,250,0,50),          // temperate freshwater marsh ()
+            new BiomeConversion(64,255,128,BiomeID.SwampType,0,200,0,0),          // temperate saltwater marsh ()
+            new BiomeConversion(96,192,64,BiomeID.SwampType,250,0,0,50),           // tropical freshwater swamp ()
+            new BiomeConversion(64,192,64,BiomeID.SwampType,250,0,0,0),           // tropical saltwater swamp ()
             new BiomeConversion(64,255,96,BiomeID.SwampType,0,0,0,0),           // mangrove swamp ()
-            new BiomeConversion(96,255,64,BiomeID.SwampType,25,25,0,0),           // tropical freshwater marsh ()
-            new BiomeConversion(64,255,64,BiomeID.SwampType,25,25,0,0),           // tropical saltwater marsh ()
-            new BiomeConversion(0,96,64,BiomeID.ForestType,0,0,0,0),            // taiga forest ()
-            new BiomeConversion(0,96,32,BiomeID.ForestType,0,0,0,0),            // temperate conifer forest ()
-            new BiomeConversion(0,160,32,BiomeID.ForestType,0,0,0,0),           // temperate broadleaf forest ()
-            new BiomeConversion(0,96,0,BiomeID.JungleType,0,0,0,0),             // tropical conifer forest ()
-            new BiomeConversion(0,128,0,BiomeID.JungleType,0,0,0,0),            // tropical dry broadleaf forest ()
-            new BiomeConversion(0,160,0,BiomeID.JungleType,0,0,0,0),            // tropical moist broadleaf forest ()
+            new BiomeConversion(96,255,64,BiomeID.SwampType,250,250,0,50),           // tropical freshwater marsh ()
+            new BiomeConversion(64,255,64,BiomeID.SwampType,250,200,0,0),           // tropical saltwater marsh ()
+            new BiomeConversion(0,96,64,BiomeID.ForestType,-300,100,0,0),            // taiga forest ()
+            new BiomeConversion(0,96,32,BiomeID.ForestType,-100,100,0,0),            // temperate conifer forest ()
+            new BiomeConversion(0,160,32,BiomeID.ForestType,0,100,0,0),           // temperate broadleaf forest ()
+            new BiomeConversion(0,96,0,BiomeID.JungleType,-50,250,0,0),             // tropical conifer forest ()
+            new BiomeConversion(0,128,0,BiomeID.JungleType,100,100,0,0),            // tropical dry broadleaf forest ()
+            new BiomeConversion(0,160,0,BiomeID.JungleType,100,250,0,0),            // tropical moist broadleaf forest ()
             new BiomeConversion(0,255,32,BiomeID.PlainsType,0,0,0,0),           // temperate grassland ()
-            new BiomeConversion(0,224,32,BiomeID.PlainsType,0,0,0,0),           // temperate savanna ()
-            new BiomeConversion(0,192,32,BiomeID.PlainsType,0,0,0,0),           // temperate shrubland ()
-            new BiomeConversion(255,160,0,BiomeID.PlainsType,0,0,0,0),          // tropical grassland ()
-            new BiomeConversion(255,176,0,BiomeID.PlainsType,0,0,0,0),          // tropical savanna ()
-            new BiomeConversion(255,192,0,BiomeID.PlainsType,0,0,0,0),          // tropical shrubland ()
-            new BiomeConversion(255,96,32,BiomeID.DesertType,0,-50,0,0),          // badland desert ()
-            new BiomeConversion(255,255,0,BiomeID.DesertType,0,0,0,0),          // sand desert ()
-            new BiomeConversion(255,128,64,BiomeID.DesertType,0,-25,0,0)          // rock desert ()
+            new BiomeConversion(0,224,32,BiomeID.PlainsType,100,0,0,0),           // temperate savanna ()
+            new BiomeConversion(0,192,32,BiomeID.PlainsType,-100,0,0,0),           // temperate shrubland ()
+            new BiomeConversion(255,160,0,BiomeID.PlainsType,0,250,0,0),          // tropical grassland ()
+            new BiomeConversion(255,176,0,BiomeID.PlainsType,100,250,0,0),          // tropical savanna ()
+            new BiomeConversion(255,192,0,BiomeID.PlainsType,-100,250,0,0),          // tropical shrubland ()
+            new BiomeConversion(255,96,32,BiomeID.DesertType,200,-500,0,-50),          // badland desert ()
+            new BiomeConversion(255,255,0,BiomeID.DesertType,100,50,0,0),          // sand desert ()
+            new BiomeConversion(255,128,64,BiomeID.DesertType,100,-250,0,0)          // rock desert ()
         
         };
         //OLD STUFF
@@ -106,7 +106,7 @@ namespace DwarvenRealms
             return 0;
         }*/
 
-        public static BiomeConversion ColorMatchBiome(Color input, BiomeID biomeids)
+        public static BiomeConversion ColorMatchBiome(Color input)
         {
             BiomeConversion tempBConv = new BiomeConversion();
             for (int i = 0; i < biomes.Length; i++)

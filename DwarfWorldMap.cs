@@ -96,112 +96,149 @@ namespace DwarvenRealms
         }
         public void loadBiomeMap(string path)
         {
-            BiomeID biomeids = new BiomeID();
-            biomeids.getBiomeIDs();
-
             Bitmap tempBiomeMap = (Bitmap)Bitmap.FromFile(path);
             // locking bitmap ...
             var bmpdata = tempBiomeMap.LockBits(new Rectangle(0, 0, tempBiomeMap.Width, tempBiomeMap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, tempBiomeMap.PixelFormat);
             int stride = bmpdata.Stride;
             int colorsize = System.Drawing.Bitmap.GetPixelFormatSize(bmpdata.PixelFormat) / 8;
-            biomeMap = new int[tempBiomeMap.Width, tempBiomeMap.Height];
             mapMap = new BiomeConversion[tempBiomeMap.Width, tempBiomeMap.Height];
-            Random biomeRandomizer = new Random();
             for (int y = 0; y < tempBiomeMap.Height; y++)
             {
                 for (int x = 0; x < tempBiomeMap.Width; x++)
                 {
-                    mapMap[x, y] = BiomeList.ColorMatchBiome(fetchColor(x, y, stride, colorsize, bmpdata), biomeids);
+                    mapMap[x, y] = BiomeList.ColorMatchBiome(fetchColor(x, y, stride, colorsize, bmpdata));
+                }
+            }
+
+            tempBiomeMap.UnlockBits(bmpdata); // unlocked bitmap
+            Console.WriteLine("Loaded biome map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
+        }
+
+        public void calculateBiomeMap()
+        {
+            Random biomeRandomizer = new Random();
+            BiomeID biomeids = new BiomeID();
+            biomeids.getBiomeIDs();
+            biomeMap = new int[mapMap.GetUpperBound(0), mapMap.GetUpperBound(1)];
+            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
+            {
+                for (int x = 0; x <  mapMap.GetUpperBound(1); x++)
+                {
                     biomeMap[x, y] = mapMap[x, y].getNewBiome(biomeRandomizer, biomeids);
                 }
             }
 
             //Neigh = Minimum number of neighbours required to stay the same.
-			for (int i = 0; i < 4; i++)
-                iterateBiomeMap(mapMap, biomeids, 3);
-
-            tempBiomeMap.UnlockBits(bmpdata); // unlocked bitmap
-            Console.WriteLine("Loaded biome map sized {0}x{1}", biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
+            //Convc = Minimum number of neighbours to turn into that type of biome. (0 to disable)
+            for (int i = 0; i < 10; i++)
+                iterateBiomeMap(biomeRandomizer,biomeids, 4, 0);
 
             //DEBUG DRAWING
             drawBiomeMap(mapMap);
+
+            Console.WriteLine("Calculated biome map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
         }
 
-        public void iterateBiomeMap(BiomeConversion[,] mapMap, BiomeID biomeids, int neigh)
+        public void iterateBiomeMap(Random rand, BiomeID biomeids, int neigh, int conv)
 		{
 		//Cellular Automata Stuff
-            //bool[,] done = new bool[mapMap.GetUpperBound(0),mapMap.GetUpperBound(1)];
+        //To avoid blending looking like it was done form top right to bottom left...
+        ///I split up when each pixel is done.
 
             for (int y = 0; y < mapMap.GetUpperBound(0); y++)
             {
                 for (int x = 0; x < mapMap.GetUpperBound(1); x++)
                 {
-					int orthadj = 0; 				//Number of neighbours that are similar / the same.
-					int[] countBiomeNeigh = new int[256]; //Only 255 different biomes possible.
-					for (int iy = y-1; iy <= y+1; iy++) 
-					{
-						for (int ix = x-1; ix <= x+1; ix++) 
-						{
-                            //If different biome color on original map, treat as a similar neighbour.
-							//The border it'll more likely turn into Deep Ocean Biomes.
-                            if (((iy < 0) || (iy >= mapMap.GetUpperBound(0))) || ((ix < 0) || (ix >= mapMap.GetUpperBound(1)))) 
-							{
-								orthadj -= 1;
-                                countBiomeNeigh[BiomeID.DeepOcean] += 2;
-							}
-							else
-							{ //If biome is within bounds...
-                                countBiomeNeigh[mapMap[ix, iy].getBiome()]++;
-                                if (mapMap[ix, iy].getBiome() == mapMap[x, y].getBiome())
-									orthadj += 1;
-                                else if (mapMap[ix, iy].getBiome() != mapMap[x, y].getBiome())
-                                    if (mapMap[ix, iy].getColor() != mapMap[x, y].getColor())
-										orthadj += 1;
-							}
-						}
-					}
-					//Oh dear, it doesn't have enough neighbours to stay the same...
-					if (orthadj < neigh)
-					{
-						int temp = -1;
-						int biomeWinner = 0;
-						for (int i = 0; i < 256; i++)
-						{
-							if (countBiomeNeigh[i] > temp)
-							{
-								temp = countBiomeNeigh[i];
-								biomeWinner = i;
-							}
-						} //Wooo, we have a winner for the new biome.
-                        mapMap[x, y].setBiome(biomeWinner);
-					}
+                    if (x % 3 == 0 )
+                    {
+                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, rand));
+                        biomeMap[x, y] = mapMap[x, y].getBiome();
+                    }
+                }
+            }
+            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
+            {
+                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
+                {
+                    if (x % 3 == 1)
+                    {
+                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, rand));
+                        biomeMap[x, y] = mapMap[x, y].getBiome();
+                    }
+                }
+            }
+            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
+            {
+                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
+                {
+                    if (x % 3 == 2)
+                    {
+                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, rand));
+                        biomeMap[x, y] = mapMap[x, y].getBiome();
+                    }
                 }
             }
 		}
 
-        ///*DRAW BIOMEMAP TO IMAGE FOR DEBUGGING
-        public void drawBiomeMap(BiomeConversion[,] mapMap)
+        public int neighCalc(int x, int y, int neigh, int conv, Random rand)
         {
-            Bitmap drawnBiomeMap = new Bitmap(mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
-            Color tempColor = new Color();
-            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
+            int biomeWinner = 0;    //Output biome.
+            int orthadj = 0;        //Number of neighbours that are similar / the same.
+            int[] countBiomeNeigh = new int[256]; //Only 255 different biomes possible.
+            for (int iy = y - 1; iy <= y + 1; iy++)
             {
-                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
+                for (int ix = x - 1; ix <= x + 1; ix++)
                 {
-                    tempColor = biomeToColor(mapMap[x, y].getBiome());
+                    //If different biome color on original map, treat as a similar neighbour.
+                    //The border it'll more likely turn into Deep Ocean Biomes.
+                    if (((iy < 0) || (iy >= mapMap.GetUpperBound(0))) || ((ix < 0) || (ix >= mapMap.GetUpperBound(1))))
+                    {
+                        orthadj -= 1;
+                        countBiomeNeigh[BiomeID.DeepOcean] += 2;
+                    }
+                    else
+                    { //If biome is within bounds...
+                        countBiomeNeigh[mapMap[ix, iy].getBiome()]++;
+                        if (mapMap[ix, iy].getBiome() == mapMap[x, y].getBiome())
+                            orthadj += 1;
+                        else if (mapMap[ix, iy].getBiome() != mapMap[x, y].getBiome())
+                            if (mapMap[ix, iy].getColor() != mapMap[x, y].getColor())
+                                orthadj += 1;
+                    }
+                }
+            }
+            biomeWinner = mapMap[x, y].getBiome();
+            //Oh dear, it doesn't have enough neighbours to stay the same...
+            if (orthadj < neigh)
+            {
+                int temp = -1;
+                for (int i = 0; i < 256; i++)
+                {
+                    if (countBiomeNeigh[i] > temp && countBiomeNeigh[i] > conv)
+                    {
+                        temp = countBiomeNeigh[i];
+                        biomeWinner = i;
+                    }
+                } //Wooo, we have a winner for the new biome.
+                
+            }
+            return biomeWinner;
+        }
+
+        ///*DRAW BIOMEMAP TO IMAGE FOR DEBUGGING
+        public void drawBiomeMap(BiomeConversion[,] mopMap)
+        {
+            Bitmap drawnBiomeMap = new Bitmap(mopMap.GetUpperBound(0), mopMap.GetUpperBound(1));
+            Color tempColor = new Color();
+            for (int y = 0; y < mopMap.GetUpperBound(0); y++)
+            {
+                for (int x = 0; x < mopMap.GetUpperBound(1); x++)
+                {
+                    tempColor = biomeToColor(mopMap[x, y].getBiome());
                     drawnBiomeMap.SetPixel(x, y, tempColor);
                 }
             }
             drawnBiomeMap.Save("DEBUG1.bmp");
-            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
-            {
-                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
-                {
-                    tempColor = mapMap[x, y].getColor();
-                    drawnBiomeMap.SetPixel(x, y, tempColor);
-                }
-            }
-            drawnBiomeMap.Save("DEBUG2.bmp");
         }
 
         public Color biomeToColor(int biome)

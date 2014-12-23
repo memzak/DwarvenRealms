@@ -82,20 +82,52 @@ namespace DwarvenRealms
             }
             else
             {//Oh, nevermind, you are a biome?
-                int randotemp = rand.Next(0,50);
+                //Let's get some random going...
+                int randotemp = (rand.Next(0, 1000) - 500);
+                int randoveg = (rand.Next(0, 1000) - 500);
+                int randovolc = (rand.Next(0, 1000) - 500);
+                int randoevil = (rand.Next(0, 1000) - 500);
 
-                if ((randotemp + modTemperature) >= 25)
+                if ((randotemp + modTemperature) >= 400)
                 {//Hot Biome Groups
-                    minecraftBiome = biomeids.BGroupHot[minecraftBiomeType][rand.Next(0, biomeids.BGroupHot[minecraftBiomeType].Length)];
+                    if ((randoveg + modVegetation) >= 400)
+                        minecraftBiome = biomeids.BGroupHotHV[minecraftBiomeType][rand.Next(0, biomeids.BGroupHotHV[minecraftBiomeType].Length)];
+                    else if ((randoveg + modVegetation) <= -400)
+                        minecraftBiome = biomeids.BGroupHotLV[minecraftBiomeType][rand.Next(0, biomeids.BGroupHotLV[minecraftBiomeType].Length)];
+                    else
+                        minecraftBiome = biomeids.BGroupHot[minecraftBiomeType][rand.Next(0, biomeids.BGroupHot[minecraftBiomeType].Length)];
                 }
-                else if ((randotemp + modTemperature) <= -25)
+                else if ((randotemp + modTemperature) <= -400)
                 {//Cold Biome Groups
-                    minecraftBiome = biomeids.BGroupCol[minecraftBiomeType][rand.Next(0, biomeids.BGroupCol[minecraftBiomeType].Length)];
+                    if ((randoveg + modVegetation) >= 400)
+                        minecraftBiome = biomeids.BGroupColHV[minecraftBiomeType][rand.Next(0, biomeids.BGroupColHV[minecraftBiomeType].Length)];
+                    else if ((randoveg + modVegetation) <= -400)
+                        minecraftBiome = biomeids.BGroupColLV[minecraftBiomeType][rand.Next(0, biomeids.BGroupColLV[minecraftBiomeType].Length)];
+                    else
+                        minecraftBiome = biomeids.BGroupCol[minecraftBiomeType][rand.Next(0, biomeids.BGroupCol[minecraftBiomeType].Length)];
                 }
                 else
                 {//Medium Biome Groups
-                    minecraftBiome = biomeids.BGroupMed[minecraftBiomeType][rand.Next(0, biomeids.BGroupMed[minecraftBiomeType].Length)];
+                    if ((randoveg + modVegetation) >= 400)
+                        minecraftBiome = biomeids.BGroupMedHV[minecraftBiomeType][rand.Next(0, biomeids.BGroupMedHV[minecraftBiomeType].Length)];
+                    else if ((randoveg + modVegetation) <= -400)
+                        minecraftBiome = biomeids.BGroupMedLV[minecraftBiomeType][rand.Next(0, biomeids.BGroupMedLV[minecraftBiomeType].Length)];
+                    else
+                        minecraftBiome = biomeids.BGroupMed[minecraftBiomeType][rand.Next(0, biomeids.BGroupMed[minecraftBiomeType].Length)];
+                }   
+                //Volcanoes Take Preference over other stuff.
+                if ((randovolc + modVolcanism) >= 500)
+                    minecraftBiome = biomeids.BGroupVolcano[rand.Next(0, biomeids.BGroupVolcano.Length)];
+                //Good / Evil Takes Preference over everything else.
+                if ((randoevil + modEvilness) >= 450)
+                {
+                    minecraftBiome = biomeids.BGroupGood[minecraftBiomeType][rand.Next(0, biomeids.BGroupGood[minecraftBiomeType].Length)];
                 }
+                else if ((randoevil + modEvilness) <= -450)
+                {
+                    minecraftBiome = biomeids.BGroupEvil[rand.Next(0, biomeids.BGroupEvil.Length)];
+                }
+
             }
 
             return minecraftBiome;
