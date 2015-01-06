@@ -114,24 +114,120 @@ namespace DwarvenRealms
             Console.WriteLine("Loaded biome map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
         }
 
+        public void loadTemperatureMap(string path)
+        {
+            Bitmap tempTmpMap = (Bitmap)Bitmap.FromFile(path);
+            // locking bitmap ...
+            var bmpdata = tempTmpMap.LockBits(new Rectangle(0, 0, tempTmpMap.Width, tempTmpMap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, tempTmpMap.PixelFormat);
+            int stride = bmpdata.Stride;
+            int colorsize = System.Drawing.Bitmap.GetPixelFormatSize(bmpdata.PixelFormat) / 8;
+            for (int y = 0; y < mapMap.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x < mapMap.GetUpperBound(0); x++)
+                {
+                    mapMap[x, y].modTemperature += BiomeList.modTmpConversion(fetchColor(x, y, stride, colorsize, bmpdata));
+                }
+            }
+
+            tempTmpMap.UnlockBits(bmpdata); // unlocked bitmap
+            Console.WriteLine("Loaded temperature map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
+        }
+
+        public void loadVegetationMap(string path)
+        {
+            Bitmap tempVegMap = (Bitmap)Bitmap.FromFile(path);
+            // locking bitmap ...
+            var bmpdata = tempVegMap.LockBits(new Rectangle(0, 0, tempVegMap.Width, tempVegMap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, tempVegMap.PixelFormat);
+            int stride = bmpdata.Stride;
+            int colorsize = System.Drawing.Bitmap.GetPixelFormatSize(bmpdata.PixelFormat) / 8;
+            for (int y = 0; y < mapMap.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x < mapMap.GetUpperBound(0); x++)
+                {
+                    mapMap[x, y].modVegetation += BiomeList.modVegConversion(fetchColor(x, y, stride, colorsize, bmpdata));
+                }
+            }
+
+            tempVegMap.UnlockBits(bmpdata); // unlocked bitmap
+            Console.WriteLine("Loaded vegetation map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
+        }
+
+        public void loadVolcanismMap(string path)
+        {
+            Bitmap tempVolMap = (Bitmap)Bitmap.FromFile(path);
+            // locking bitmap ...
+            var bmpdata = tempVolMap.LockBits(new Rectangle(0, 0, tempVolMap.Width, tempVolMap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, tempVolMap.PixelFormat);
+            int stride = bmpdata.Stride;
+            int colorsize = System.Drawing.Bitmap.GetPixelFormatSize(bmpdata.PixelFormat) / 8;
+            for (int y = 0; y < mapMap.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x < mapMap.GetUpperBound(0); x++)
+                {
+                    mapMap[x, y].modVolcanism += BiomeList.modVolConversion(fetchColor(x, y, stride, colorsize, bmpdata));
+                }
+            }
+
+            tempVolMap.UnlockBits(bmpdata); // unlocked bitmap
+            Console.WriteLine("Loaded volcanism map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
+        }
+
+        public void loadEvilMap(string path)
+        {
+            Bitmap tempEvilMap = (Bitmap)Bitmap.FromFile(path);
+            // locking bitmap ...
+            var bmpdata = tempEvilMap.LockBits(new Rectangle(0, 0, tempEvilMap.Width, tempEvilMap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, tempEvilMap.PixelFormat);
+            int stride = bmpdata.Stride;
+            int colorsize = System.Drawing.Bitmap.GetPixelFormatSize(bmpdata.PixelFormat) / 8;
+            for (int y = 0; y < mapMap.GetUpperBound(1); y++)
+            {
+                for (int x = 0; x < mapMap.GetUpperBound(0); x++)
+                {
+                    mapMap[x, y].modEvilness += BiomeList.modEvilConversion(fetchColor(x, y, stride, colorsize, bmpdata));
+                }
+            }
+
+            tempEvilMap.UnlockBits(bmpdata); // unlocked bitmap
+            Console.WriteLine("Loaded evil map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
+        }
+
         public void calculateBiomeMap()
         {
             Random biomeRandomizer = new Random();
             BiomeID biomeids = new BiomeID();
             biomeids.getBiomeIDs();
             biomeMap = new int[mapMap.GetUpperBound(0), mapMap.GetUpperBound(1)];
+            //Now to start selecting biomes...
             for (int y = 0; y < mapMap.GetUpperBound(0); y++)
             {
                 for (int x = 0; x <  mapMap.GetUpperBound(1); x++)
                 {
-                    biomeMap[x, y] = mapMap[x, y].getNewBiome(biomeRandomizer, biomeids);
+                        //Standard biome selection process.
+                        biomeMap[x, y] = mapMap[x, y].getNewBiome(biomeRandomizer, biomeids);
+
+                        //3x3 Blobs for rarer biome types. (Eg: Volcanoes)
+                        int randovolc = (biomeRandomizer.Next(0, 1000) - 500);
+                        int randoevil = (biomeRandomizer.Next(0, 1000) - 500);
+
+                        if ((randovolc + mapMap[x, y].modVolcanism) >= 500)
+                            placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 1));
+                        if ((randoevil + mapMap[x, y].modEvilness) >= 450) 
+                            placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 2));
+                        else if ((randoevil + mapMap[x, y].modEvilness) <= -450)
+                            placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 3));
                 }
             }
 
             //Neigh = Minimum number of neighbours required to stay the same.
             //Convc = Minimum number of neighbours to turn into that type of biome. (0 to disable)
-            for (int i = 0; i < 10; i++)
-                iterateBiomeMap(biomeRandomizer,biomeids, 4, 0);
+            //IterRange = Range Around Co-ordiante to check.
+            for (int i = 0; i < 3; i++)
+                iterateBiomeMap(biomeRandomizer, biomeids, 4, 0, 3);
+            for (int i = 0; i < 6; i++)
+                iterateBiomeMap(biomeRandomizer, biomeids, 4, 0, 2);
+            for (int i = 0; i < 3; i++)
+                iterateBiomeMap(biomeRandomizer, biomeids, 6, 0, 2);
+            for (int i = 0; i < 5 ; i++)
+                iterateBiomeMap(biomeRandomizer, biomeids, 4, 0, 1);
 
             //DEBUG DRAWING
             drawBiomeMap(mapMap);
@@ -139,7 +235,15 @@ namespace DwarvenRealms
             Console.WriteLine("Calculated biome map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
         }
 
-        public void iterateBiomeMap(Random rand, BiomeID biomeids, int neigh, int conv)
+        public void placeBiomeBlob(int x, int y, int biome)
+        {
+            for (int iy = y - 2; iy <= y + 2; iy++)
+                for (int ix = x - 2; ix <= x + 2; ix++)
+                    if ( !(((iy < 0) || (iy >= mapMap.GetUpperBound(0))) || ((ix < 0) || (ix >= mapMap.GetUpperBound(1)))) )
+                        biomeMap[ix, iy] = biome;
+        }
+
+        public void iterateBiomeMap(Random rand, BiomeID biomeids, int neigh, int conv, int iterRange)
 		{
 		//Cellular Automata Stuff
         //To avoid blending looking like it was done form top right to bottom left...
@@ -151,7 +255,7 @@ namespace DwarvenRealms
                 {
                     if (x % 3 == 0 )
                     {
-                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, rand));
+                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, iterRange, rand));
                         biomeMap[x, y] = mapMap[x, y].getBiome();
                     }
                 }
@@ -162,7 +266,7 @@ namespace DwarvenRealms
                 {
                     if (x % 3 == 1)
                     {
-                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, rand));
+                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, iterRange, rand));
                         biomeMap[x, y] = mapMap[x, y].getBiome();
                     }
                 }
@@ -173,21 +277,21 @@ namespace DwarvenRealms
                 {
                     if (x % 3 == 2)
                     {
-                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, rand));
+                        mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, iterRange, rand));
                         biomeMap[x, y] = mapMap[x, y].getBiome();
                     }
                 }
             }
 		}
 
-        public int neighCalc(int x, int y, int neigh, int conv, Random rand)
+        public int neighCalc(int x, int y, int neigh, int conv, int iR, Random rand)
         {
             int biomeWinner = 0;    //Output biome.
             int orthadj = 0;        //Number of neighbours that are similar / the same.
             int[] countBiomeNeigh = new int[256]; //Only 255 different biomes possible.
-            for (int iy = y - 1; iy <= y + 1; iy++)
+            for (int iy = y - iR; iy <= y + iR; iy++)
             {
-                for (int ix = x - 1; ix <= x + 1; ix++)
+                for (int ix = x - iR; ix <= x + iR; ix++)
                 {
                     //If different biome color on original map, treat as a similar neighbour.
                     //The border it'll more likely turn into Deep Ocean Biomes.
@@ -201,9 +305,9 @@ namespace DwarvenRealms
                         countBiomeNeigh[mapMap[ix, iy].getBiome()]++;
                         if (mapMap[ix, iy].getBiome() == mapMap[x, y].getBiome())
                             orthadj += 1;
-                        else if (mapMap[ix, iy].getBiome() != mapMap[x, y].getBiome())
-                            if (mapMap[ix, iy].getColor() != mapMap[x, y].getColor())
-                                orthadj += 1;
+                        //else if (mapMap[ix, iy].getBiome() != mapMap[x, y].getBiome())
+                        //    if (mapMap[ix, iy].getColor() != mapMap[x, y].getColor())
+                        //        orthadj += 1;
                     }
                 }
             }

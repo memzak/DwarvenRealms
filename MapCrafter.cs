@@ -67,6 +67,10 @@ namespace DwarvenRealms
             currentDwarfMap.loadElevationMap(Settings.Default.elevationMapPath);
             currentDwarfMap.loadWaterMap(Settings.Default.elevationWaterMapPath);
             currentDwarfMap.loadBiomeMap(Settings.Default.biomeMapPath);
+            currentDwarfMap.loadTemperatureMap(Settings.Default.temperatureMapPath);
+            currentDwarfMap.loadVegetationMap(Settings.Default.vegetationMapPath);
+            currentDwarfMap.loadVolcanismMap(Settings.Default.volcanismMapPath);
+            currentDwarfMap.loadEvilMap(Settings.Default.evilMapPath);
             currentDwarfMap.calculateBiomeMap();
             currentCaveMap = new CaveThing(currentDwarfMap);
         }

@@ -67,26 +67,29 @@ namespace DwarvenRealms
         {
             return minecraftBiome;
         }
-        public int getNewBiome(Random rand, BiomeID biomeids)
+        public int getNewBiome(Random rand, BiomeID biomeids, int biomeGroup = 0)
         {
             //More Stuff'll go here later.
+            int randotemp = (rand.Next(0, 1000) - 500);
 
             if (isRiver())
             {//Are you a Lake?
-                if (minecraftBiomeType == BiomeID.SwampType || minecraftBiomeType == BiomeID.JungleType)
-                    minecraftBiome = BiomeID.LushRiver;
-                else if (minecraftBiomeType == BiomeID.DesertType)
-                    minecraftBiome = BiomeID.DryRiver;
+                if ((randotemp + modTemperature) <= -400)
+                    minecraftBiome = BiomeID.FrozenRiver;
                 else
-                    minecraftBiome = BiomeID.River;
+                {
+                    if (minecraftBiomeType == BiomeID.SwampType || minecraftBiomeType == BiomeID.JungleType)
+                        minecraftBiome = BiomeID.LushRiver;
+                    else if (minecraftBiomeType == BiomeID.DesertType)
+                        minecraftBiome = BiomeID.DryRiver;
+                    else
+                        minecraftBiome = BiomeID.River;
+                }
             }
             else
             {//Oh, nevermind, you are a biome?
                 //Let's get some random going...
-                int randotemp = (rand.Next(0, 1000) - 500);
                 int randoveg = (rand.Next(0, 1000) - 500);
-                int randovolc = (rand.Next(0, 1000) - 500);
-                int randoevil = (rand.Next(0, 1000) - 500);
 
                 if ((randotemp + modTemperature) >= 400)
                 {//Hot Biome Groups
@@ -115,15 +118,16 @@ namespace DwarvenRealms
                     else
                         minecraftBiome = biomeids.BGroupMed[minecraftBiomeType][rand.Next(0, biomeids.BGroupMed[minecraftBiomeType].Length)];
                 }   
+                //This stuff checked outisde of this class for 3x3 blobs.
                 //Volcanoes Take Preference over other stuff.
-                if ((randovolc + modVolcanism) >= 500)
+                if (biomeGroup == 1)
                     minecraftBiome = biomeids.BGroupVolcano[rand.Next(0, biomeids.BGroupVolcano.Length)];
                 //Good / Evil Takes Preference over everything else.
-                if ((randoevil + modEvilness) >= 450)
+                else if (biomeGroup == 2)
                 {
                     minecraftBiome = biomeids.BGroupGood[minecraftBiomeType][rand.Next(0, biomeids.BGroupGood[minecraftBiomeType].Length)];
                 }
-                else if ((randoevil + modEvilness) <= -450)
+                else if (biomeGroup == 3)
                 {
                     minecraftBiome = biomeids.BGroupEvil[rand.Next(0, biomeids.BGroupEvil.Length)];
                 }

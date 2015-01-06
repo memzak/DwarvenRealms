@@ -194,7 +194,7 @@ namespace DwarvenRealms
             BGroupCol = new int[7][]
             {
                 new int[1] {FrozenOcean},
-		        new int[3] {Arctic,Arctic,Tundra},
+		        new int[4] {Arctic,Arctic,Tundra,IcePlains},
 		        new int[4] {FrostForest,SpruceWoods,Taiga,Taiga},
 		        new int[1] {Taiga},
 		        new int[2] {Arctic,Glacier},
@@ -206,10 +206,10 @@ namespace DwarvenRealms
             {
                 new int[5] {Ocean,Ocean,CoralReef,KelpForest,OceanOilField},
                 new int[13] {Chaparral,Chaparral,FlowerField,Grassland,Meadow,Meadow,Moor,Orchard,Prairie,Scrubland,Shrubland,Thicket,Plains},
-		        new int[11] {BorealForest,CherryBlossomGrove,Grove,MapleWoods,MeadowForest,MysticGrove,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,Forest},
+		        new int[13] {BorealForest,CherryBlossomGrove,Grove,MapleWoods,MeadowForest,MysticGrove,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,Forest,BirchForest,RoofedForest},
 		        new int[5] {BambooForest,Rainforest,TemperateRainforest,TropicalRainforest,Jungle},
 		        new int[5] {Outback,Steppe,Desert,Desert,DesertOilField},
-		        new int[4] {Crag,Highland,Mountain,ExtremeHills},
+		        new int[6] {Crag,Highland,Mountain,ExtremeHills,ExtremeHillsP,ExtremeHillsM},
 		        new int[4] {Bayou,Bog,Wetland,Swampland}
             };
 
@@ -231,7 +231,7 @@ namespace DwarvenRealms
                 new int[2] {Arctic,Arctic},
 		        new int[3] {FrostForest,Shield,Taiga},
 		        new int[1] {FrostForest},
-		        new int[2] {Arctic,Glacier},
+		        new int[3] {Arctic,Glacier,ColdBeach},
 		        new int[2] {Crag,Glacier},
 		        new int[1] {Quagmire}
             };
@@ -239,22 +239,22 @@ namespace DwarvenRealms
             BGroupMedLV = new int[7][]
             {
                 new int[5] {Ocean,Ocean,CoralReef,KelpForest,OceanOilField},
-                new int[5] {Grassland,Highland,Shrubland,Steppe,Plains},
+                new int[6] {Grassland,Highland,Shrubland,Steppe,Plains,Savanna},
 		        new int[6] {DeadForest,Grove,MapleWoods,MeadowForest,Orchard,Shield},
 		        new int[4] {Rainforest,RedwoodForest,SeasonalForest,Tropics},
 		        new int[3] {Desert,Desert,DesertOilField},
-		        new int[2] {Crag,Wasteland},
+		        new int[4] {Crag,Wasteland,ExtremeHillsM,ExtremeHillsPM},
 		        new int[3] {DeadSwamp,Marsh,Quagmire}
             };
 
             BGroupHotLV = new int[7][]
             {
                 new int[5] {Ocean,Ocean,CoralReef,KelpForest,OceanOilField},
-                new int[6] {Grassland,Highland,Moor,Shrubland,Steppe,Plains},
+                new int[6] {Grassland,Highland,Moor,Shrubland,Steppe,Savanna},
 		        new int[4] {DeadForest,Orchard,SeasonalForest,Shield},
 		        new int[2] {RedwoodForest,Tropics},
 		        new int[4] {Wasteland,Wasteland,Desert,DesertOilField},
-		        new int[3] {Canyon,Crag,Wasteland},
+		        new int[4] {Canyon,Wasteland,Mesa,MesaBryce},
 		        new int[3] {DeadSwamp,Marsh,Quagmire}
             };
 
@@ -262,23 +262,23 @@ namespace DwarvenRealms
             BGroupColHV = new int[7][]
             {
                 new int[1] {FrozenOcean},
-                new int[1] {Tundra},
-		        new int[2] {ConiferousForestSnow,SpruceWoods},
-		        new int[1] {SacredSprings},
+                new int[2] {Tundra,IcePlainsSpikes},
+		        new int[4] {ConiferousForestSnow,SpruceWoods,ColdTaiga,Taiga},
+		        new int[3] {SacredSprings,MegaTaiga,MegaSpruceTaiga},
 		        new int[1] {Glacier},
-		        new int[1] {Glacier},
+		        new int[1] {ColdTaigaM},
 		        new int[1] {Wetland}
             };
 
             BGroupMedHV = new int[7][]
             {
                 new int[6] {Ocean,CoralReef,CoralReef,KelpForest,KelpForest,OceanOilField},
-                new int[6] {Brushland,Garden,Heathland,LavenderFields,LavenderFields,Thicket},
-		        new int[10] {BambooForestGrowthcraft,BorealForest,ConiferousForest,DeciduousForest,JadeCliffs,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,Forest},
+                new int[7] {Brushland,Garden,Heathland,LavenderFields,LavenderFields,Thicket,SunflowerPlains},
+		        new int[12] {BambooForestGrowthcraft,BorealForest,ConiferousForest,DeciduousForest,JadeCliffs,RedwoodForest,SeasonalForest,SpruceWoods,Woodland,FlowerForest,BirchForestM,RoofedForestM},
 		        new int[7] {BambooForestGrowthcraft,BambooForest,FungiForest,SacredSprings,TemperateRainforest,TropicalRainforest,Jungle},
 		        new int[3] {LushDesert,Mangrove,Oasis},
 		        new int[7] {Highland,Highland,Mountain,Mountain,SacredSprings,Shield,ExtremeHills},
-		        new int[6] {Bog,LushSwamp,LushSwamp,Silkglades,Sludgepit,Swampland}
+		        new int[6] {Bog,LushSwamp,LushSwamp,Silkglades,Sludgepit,SwamplandM}
             };
 
             BGroupHotHV = new int[7][]
@@ -289,17 +289,17 @@ namespace DwarvenRealms
 		        new int[7] {BambooForestGrowthcraft,BambooForest,FungiForest,TemperateRainforest,TropicalRainforest,Tropics,Jungle},
 		        new int[4] {LushDesert,Mangrove,Oasis,Oasis},
 		        new int[4] {Canyon,Highland,Mountain,ExtremeHills},
-		        new int[5] {Bog,LushSwamp,Silkglades,Sludgepit,Swampland}
+		        new int[5] {Bog,LushSwamp,Silkglades,Sludgepit,SwamplandM}
             };
 		
             //Other Biome Variants
             BGroupGood = new int[7][]
             {
                 new int[3] {CoralReef,KelpForest,OceanOilField},
-                new int[3] {Garden,OriginValley,FlowerField},
+                new int[4] {Garden,OriginValley,FlowerField,MushroomIsland},
 		        new int[4] {MysticGrove,SacredSprings,MagicalForest,FlowerForest},
 		        new int[2] {MagicalForest,Tropics},
-		        new int[1] {Oasis},
+		        new int[2] {Oasis,MushroomIsland},
 		        new int[1] {SacredSprings},
 		        new int[2] {Oasis,Tropics}
             };

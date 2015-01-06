@@ -116,5 +116,30 @@ namespace DwarvenRealms
             }
             return tempBConv;
         }
+
+        public static int modTmpConversion(Color input)
+        {
+            //It's shades grey, so I can pick whichever color I want.
+            return input.R - 128;
+        }
+
+        public static int modVegConversion(Color input)
+        {
+            //It's shades grey, so I can pick whichever color I want.
+            return (int)((float)(input.R - 128) * 1.2);
+        }
+
+        public static int modVolConversion(Color input)
+        {
+
+            //It's shades grey, so I can pick whichever color I want.
+            return (int)((float)(input.R - 128) * 2);
+        }
+
+        public static int modEvilConversion(Color input)
+        {
+            //It's shades grey, so I can pick whichever color I want.
+            return (int)((float)(input.R - 128) * 1.5);
+        }
     }
 }

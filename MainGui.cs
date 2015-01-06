@@ -17,6 +17,10 @@ namespace DwarvenRealms
             elevationMapPathTextBox.Text = Settings.Default.elevationMapPath;
             elevationWaterMapPathTextBox.Text = Settings.Default.elevationWaterMapPath;
             biomeMapPathTextBox.Text = Settings.Default.biomeMapPath;
+            temperatureMapPathTextBox.Text = Settings.Default.vegetationMapPath;
+            vegetationMapPathTextBox.Text = Settings.Default.vegetationMapPath;
+            volcanismMapPathTextBox.Text = Settings.Default.vegetationMapPath;
+            evilMapPathTextBox.Text = Settings.Default.vegetationMapPath;
             borderNorthInput.Value = Settings.Default.borderNorth;
             borderSouthInput.Value = Settings.Default.borderSouth;
             borderWestInput.Value = Settings.Default.borderWest;
@@ -116,35 +120,83 @@ namespace DwarvenRealms
 
         private void minecraftSaveTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (!System.IO.Directory.Exists(minecraftSaveTextBox.Text) || minecraftSaveTextBox.Text.Trim().Length == 0)
+                label4.BackColor = incompleteFormColor;
+            else label4.BackColor = completeFormColor;
             Settings.Default.outputPath = minecraftSaveTextBox.Text;
             Console.WriteLine("Output path changed to " + Settings.Default.outputPath);
         }
 
         private void elevationMapPathTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (!System.IO.File.Exists(elevationMapPathTextBox.Text) || elevationMapPathTextBox.Text.Trim().Length == 0) 
+                elevationMapLabel.BackColor = incompleteFormColor;
+            else elevationMapLabel.BackColor = completeFormColor;
             Settings.Default.elevationMapPath = elevationMapPathTextBox.Text;
             Console.WriteLine("Elevation map path changed to " + Settings.Default.elevationMapPath);
+        }
+
+        private void elevationWaterMapPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!System.IO.File.Exists(elevationWaterMapPathTextBox.Text) || elevationWaterMapPathTextBox.Text.Trim().Length == 0) 
+                elevationWaterMapLabel.BackColor = incompleteFormColor;
+            else elevationWaterMapLabel.BackColor = completeFormColor;
+            Settings.Default.elevationWaterMapPath = elevationWaterMapPathTextBox.Text;
+            Console.WriteLine("Elevation water map path changed to " + Settings.Default.elevationWaterMapPath);
+        }
+
+        private void biomeMapPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!System.IO.File.Exists(biomeMapPathTextBox.Text) || biomeMapPathTextBox.Text.Trim().Length == 0) 
+                biomeMapLabel.BackColor = incompleteFormColor;
+            else biomeMapLabel.BackColor = completeFormColor;
+            Settings.Default.biomeMapPath = biomeMapPathTextBox.Text;
+            Console.WriteLine("Biome map path changed to " + Settings.Default.biomeMapPath);
+        }
+
+        private void temperatureMapPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!System.IO.File.Exists(temperatureMapPathTextBox.Text) || temperatureMapPathTextBox.Text.Trim().Length == 0) 
+                temperatureMapLabel.BackColor = incompleteFormColor;
+            else temperatureMapLabel.BackColor = completeFormColor;
+            Settings.Default.temperatureMapPath = temperatureMapPathTextBox.Text;
+            Console.WriteLine("Temperature map path changed to " + Settings.Default.temperatureMapPath);
+        }
+
+        private void vegetationMapPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!System.IO.File.Exists(vegetationMapPathTextBox.Text) || vegetationMapPathTextBox.Text.Trim().Length == 0) 
+                vegetationMapLabel.BackColor = incompleteFormColor;
+            else vegetationMapLabel.BackColor = completeFormColor;
+            Settings.Default.vegetationMapPath = vegetationMapPathTextBox.Text;
+            Console.WriteLine("Vegetation map path changed to " + Settings.Default.vegetationMapPath);
+        }
+
+        private void volcanismMapPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!System.IO.File.Exists(volcanismMapPathTextBox.Text) || volcanismMapPathTextBox.Text.Trim().Length == 0) 
+                volcanismMapLabel.BackColor = incompleteFormColor;
+            else volcanismMapLabel.BackColor = completeFormColor;
+            Settings.Default.volcanismMapPath = volcanismMapPathTextBox.Text;
+            Console.WriteLine("Volcanism map path changed to " + Settings.Default.volcanismMapPath);
+        }
+
+        private void evilMapPathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!System.IO.File.Exists(evilMapPathTextBox.Text) || evilMapPathTextBox.Text.Trim().Length == 0) 
+                evilMapLabel.BackColor = incompleteFormColor;
+            else evilMapLabel.BackColor = completeFormColor;
+            Settings.Default.evilMapPath = evilMapPathTextBox.Text;
+            Console.WriteLine("Evil map path changed to " + Settings.Default.evilMapPath);
         }
 
         private void elevationMapLoadButton_Click(object sender, EventArgs e)
         {
             DialogResult result = elevationMapFileDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 elevationMapPathTextBox.Text = elevationMapFileDialog.FileName;
             }
-        }
-
-        private void biomeMapPathTextBox_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.biomeMapPath = biomeMapPathTextBox.Text;
-            Console.WriteLine("Biome map path changed to " + Settings.Default.biomeMapPath);
-        }
-
-        private void elevationWaterMapPathTextBox_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.elevationWaterMapPath = elevationWaterMapPathTextBox.Text;
-            Console.WriteLine("Elevation water map path changed to " + Settings.Default.elevationWaterMapPath);
         }
 
         private void elevationWaterMapLoadButton_Click(object sender, EventArgs e)
@@ -162,6 +214,42 @@ namespace DwarvenRealms
             if (result == DialogResult.OK)
             {
                biomeMapPathTextBox.Text = biomeMapFileDialog.FileName;
+            }
+        }
+
+        private void temperatureMapLoadButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = temperatureMapFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                temperatureMapPathTextBox.Text = temperatureMapFileDialog.FileName;
+            }
+        }
+
+        private void vegetationMapLoadButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = vegetationMapFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                vegetationMapPathTextBox.Text = vegetationMapFileDialog.FileName;
+            }
+        }
+
+        private void volcanismMapLoadButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = volcanismMapFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                volcanismMapPathTextBox.Text = volcanismMapFileDialog.FileName;
+            }
+        }
+
+        private void evilMapLoadButton_Click(object sender, EventArgs e)
+        {
+            DialogResult result = evilMapFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                evilMapPathTextBox.Text = evilMapFileDialog.FileName;
             }
         }
 
@@ -234,5 +322,6 @@ namespace DwarvenRealms
         {
             Settings.Default.levelName = levelNameTextBox.Text;
         }
+
     }
 }
