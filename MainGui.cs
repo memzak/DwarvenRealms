@@ -17,10 +17,10 @@ namespace DwarvenRealms
             elevationMapPathTextBox.Text = Settings.Default.elevationMapPath;
             elevationWaterMapPathTextBox.Text = Settings.Default.elevationWaterMapPath;
             biomeMapPathTextBox.Text = Settings.Default.biomeMapPath;
-            temperatureMapPathTextBox.Text = Settings.Default.vegetationMapPath;
+            temperatureMapPathTextBox.Text = Settings.Default.temperatureMapPath;
             vegetationMapPathTextBox.Text = Settings.Default.vegetationMapPath;
-            volcanismMapPathTextBox.Text = Settings.Default.vegetationMapPath;
-            evilMapPathTextBox.Text = Settings.Default.vegetationMapPath;
+            volcanismMapPathTextBox.Text = Settings.Default.volcanismMapPath;
+            evilMapPathTextBox.Text = Settings.Default.evilMapPath;
             borderNorthInput.Value = Settings.Default.borderNorth;
             borderSouthInput.Value = Settings.Default.borderSouth;
             borderWestInput.Value = Settings.Default.borderWest;

@@ -199,28 +199,27 @@ namespace DwarvenRealms
             //Now to start selecting biomes...
             for (int y = 0; y < mapMap.GetUpperBound(0); y++)
             {
-                for (int x = 0; x <  mapMap.GetUpperBound(1); x++)
+                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
                 {
-                        //Standard biome selection process.
-                        biomeMap[x, y] = mapMap[x, y].getNewBiome(biomeRandomizer, biomeids);
+                    biomeMap[x, y] = mapMap[x, y].getNewBiome(biomeRandomizer, biomeids);
 
-                        //3x3 Blobs for rarer biome types. (Eg: Volcanoes)
-                        int randovolc = (biomeRandomizer.Next(0, 1000) - 500);
-                        int randoevil = (biomeRandomizer.Next(0, 1000) - 500);
+                    //3x3 Blobs for rarer biome types. (Eg: Volcanoes)
+                    int randovolc = (biomeRandomizer.Next(0, 100) * 2);
+                    int randoevil = ((biomeRandomizer.Next(0, 250) - 125) * 2);
 
-                        if ((randovolc + mapMap[x, y].modVolcanism) >= 500)
-                            placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 1));
-                        if ((randoevil + mapMap[x, y].modEvilness) >= 450) 
-                            placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 2));
-                        else if ((randoevil + mapMap[x, y].modEvilness) <= -450)
-                            placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 3));
+                    if ((randovolc + mapMap[x, y].modVolcanism) >= 700)
+                        placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 1));
+                    if ((randoevil + mapMap[x, y].modEvilness) >= 500) 
+                        placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 2));
+                    else if ((randoevil + mapMap[x, y].modEvilness) <= -500)
+                        placeBiomeBlob(x, y, mapMap[x, y].getNewBiome(biomeRandomizer, biomeids, 3));
                 }
             }
 
             //Neigh = Minimum number of neighbours required to stay the same.
             //Convc = Minimum number of neighbours to turn into that type of biome. (0 to disable)
             //IterRange = Range Around Co-ordiante to check.
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 1; i++)
                 iterateBiomeMap(biomeRandomizer, biomeids, 4, 0, 3);
             for (int i = 0; i < 6; i++)
                 iterateBiomeMap(biomeRandomizer, biomeids, 4, 0, 2);
@@ -229,18 +228,26 @@ namespace DwarvenRealms
             for (int i = 0; i < 5 ; i++)
                 iterateBiomeMap(biomeRandomizer, biomeids, 4, 0, 1);
 
+            //Ensure all the correct blocks are set
+            for (int y = 0; y < mapMap.GetUpperBound(0); y++)
+                for (int x = 0; x < mapMap.GetUpperBound(1); x++)
+                    mapMap[x, y].setNewLayers();
+
             //DEBUG DRAWING
-            drawBiomeMap(mapMap);
+            drawBiomeMap();
 
             Console.WriteLine("Calculated biome map sized {0}x{1}", mapMap.GetUpperBound(0), mapMap.GetUpperBound(1));
         }
 
         public void placeBiomeBlob(int x, int y, int biome)
         {
-            for (int iy = y - 2; iy <= y + 2; iy++)
-                for (int ix = x - 2; ix <= x + 2; ix++)
-                    if ( !(((iy < 0) || (iy >= mapMap.GetUpperBound(0))) || ((ix < 0) || (ix >= mapMap.GetUpperBound(1)))) )
+            for (int iy = y - 1; iy <= y + 1; iy++)
+                for (int ix = x - 1; ix <= x + 1; ix++)
+                    if (!(((iy < 0) || (iy >= mapMap.GetUpperBound(0))) || ((ix < 0) || (ix >= mapMap.GetUpperBound(1)))))
+                    {
                         biomeMap[ix, iy] = biome;
+                        mapMap[ix, iy].setBiome(biomeMap[ix, iy]);
+                    }
         }
 
         public void iterateBiomeMap(Random rand, BiomeID biomeids, int neigh, int conv, int iterRange)
@@ -253,7 +260,7 @@ namespace DwarvenRealms
             {
                 for (int x = 0; x < mapMap.GetUpperBound(1); x++)
                 {
-                    if (x % 3 == 0 )
+                    if (x % 3 == 0)
                     {
                         mapMap[x, y].setBiome(neighCalc(x, y, neigh, conv, iterRange, rand));
                         biomeMap[x, y] = mapMap[x, y].getBiome();
@@ -284,34 +291,30 @@ namespace DwarvenRealms
             }
 		}
 
-        public int neighCalc(int x, int y, int neigh, int conv, int iR, Random rand)
+        public int neighCalc(int x, int y, int neigh, int conv, int iRan, Random rand)
         {
             int biomeWinner = 0;    //Output biome.
             int orthadj = 0;        //Number of neighbours that are similar / the same.
             int[] countBiomeNeigh = new int[256]; //Only 255 different biomes possible.
-            for (int iy = y - iR; iy <= y + iR; iy++)
+            for (int iy = y - iRan; iy <= y + iRan; iy++)
             {
-                for (int ix = x - iR; ix <= x + iR; ix++)
+                for (int ix = x - iRan; ix <= x + iRan; ix++)
                 {
-                    //If different biome color on original map, treat as a similar neighbour.
                     //The border it'll more likely turn into Deep Ocean Biomes.
-                    if (((iy < 0) || (iy >= mapMap.GetUpperBound(0))) || ((ix < 0) || (ix >= mapMap.GetUpperBound(1))))
+                    if (((iy < 0) || (iy >= biomeMap.GetUpperBound(0))) || ((ix < 0) || (ix >= biomeMap.GetUpperBound(1))))
                     {
                         orthadj -= 1;
                         countBiomeNeigh[BiomeID.DeepOcean] += 2;
                     }
                     else
                     { //If biome is within bounds...
-                        countBiomeNeigh[mapMap[ix, iy].getBiome()]++;
-                        if (mapMap[ix, iy].getBiome() == mapMap[x, y].getBiome())
+                        countBiomeNeigh[biomeMap[ix, iy]]++;
+                        if (biomeMap[ix, iy] == biomeMap[x, y])
                             orthadj += 1;
-                        //else if (mapMap[ix, iy].getBiome() != mapMap[x, y].getBiome())
-                        //    if (mapMap[ix, iy].getColor() != mapMap[x, y].getColor())
-                        //        orthadj += 1;
                     }
                 }
             }
-            biomeWinner = mapMap[x, y].getBiome();
+            biomeWinner = biomeMap[x, y];
             //Oh dear, it doesn't have enough neighbours to stay the same...
             if (orthadj < neigh)
             {
@@ -330,15 +333,15 @@ namespace DwarvenRealms
         }
 
         ///*DRAW BIOMEMAP TO IMAGE FOR DEBUGGING
-        public void drawBiomeMap(BiomeConversion[,] mopMap)
+        public void drawBiomeMap()
         {
-            Bitmap drawnBiomeMap = new Bitmap(mopMap.GetUpperBound(0), mopMap.GetUpperBound(1));
+            Bitmap drawnBiomeMap = new Bitmap(biomeMap.GetUpperBound(0), biomeMap.GetUpperBound(1));
             Color tempColor = new Color();
-            for (int y = 0; y < mopMap.GetUpperBound(0); y++)
+            for (int y = 0; y < biomeMap.GetUpperBound(0); y++)
             {
-                for (int x = 0; x < mopMap.GetUpperBound(1); x++)
+                for (int x = 0; x < biomeMap.GetUpperBound(1); x++)
                 {
-                    tempColor = biomeToColor(mopMap[x, y].getBiome());
+                    tempColor = biomeToColor(biomeMap[x, y]);
                     drawnBiomeMap.SetPixel(x, y, tempColor);
                 }
             }
@@ -487,6 +490,15 @@ namespace DwarvenRealms
             return getBiome((int)Math.Floor(x), (int)Math.Floor(y));
         }
 
+        public BiomeConversion getBiomeConversion(int x, int y)
+        {
+            return getClampedCoord(mapMap, x, y);
+        }
+        public BiomeConversion getBiomeConversion(double x, double y)
+        {
+            return getBiomeConversion((int)Math.Floor(x), (int)Math.Floor(y));
+        }
+
         /// <summary>
         /// Safely reads the value from an index grid.
         /// </summary>
@@ -512,6 +524,20 @@ namespace DwarvenRealms
         {
             if (grid == null || grid.Length == 0)
                 return double.MinValue;
+            if (x < grid.GetLowerBound(0))
+                x = grid.GetLowerBound(0);
+            if (x > grid.GetUpperBound(0))
+                x = grid.GetUpperBound(0);
+            if (y < grid.GetLowerBound(1))
+                y = grid.GetLowerBound(1);
+            if (y > grid.GetUpperBound(1))
+                y = grid.GetUpperBound(1);
+            return grid[x, y];
+        }
+        public static BiomeConversion getClampedCoord(BiomeConversion[,] grid, int x, int y)
+        {
+            if (grid == null || grid.Length == 0)
+                return BiomeList.biomes[0];
             if (x < grid.GetLowerBound(0))
                 x = grid.GetLowerBound(0);
             if (x > grid.GetUpperBound(0))

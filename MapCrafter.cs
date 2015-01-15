@@ -100,14 +100,12 @@ namespace DwarvenRealms
             currentWorld.Save();
         }
 
-        public void simpleWriteTest()
+        /*public void simpleWriteTest()
         {
             initializeMinecraftWorld();
             IChunkManager cm = currentWorld.GetChunkManager();
 
             loadDwarfMaps();
-
-
 
             int cropWidth = 40;
             int cropHeight = 40;
@@ -176,7 +174,7 @@ namespace DwarvenRealms
             }
 
             saveMinecraftWorld();
-        }
+        }*/
 
         void HeightMapChunk(ChunkRef chunk, double mapXMin, double mapXMax, double mapYMin, double mapYMax)
         {
@@ -186,71 +184,78 @@ namespace DwarvenRealms
                 {
                     double mux = (mapXMax - mapXMin) * x / 16.0 + mapXMin;
                     double muy = (mapYMax - mapYMin) * z / 16.0 + mapYMin;
+                    int xCod = (int)Math.Floor(mux + 0.5);
+                    int yCod = (int)Math.Floor(muy + 0.5);
                     int height = (int)currentDwarfMap.getElevation(mux, muy) + shift;
-                    int waterLevel = currentDwarfMap.getWaterbodyLevel((int)Math.Floor(mux + 0.5), (int)Math.Floor(muy + 0.5)) + shift;
-                    int riverLevel = currentDwarfMap.getRiverLevel((int)Math.Floor(mux + 0.5), (int)Math.Floor(muy + 0.5)) + shift;
+                    int waterLevel = currentDwarfMap.getWaterbodyLevel(xCod, yCod) + shift;
+                    int riverLevel = currentDwarfMap.getRiverLevel(xCod, yCod) + shift;
                     if (height > maxHeight) maxHeight = height;
                     if (height < minHeight) minHeight = height;
-                    int biomeID = currentDwarfMap.getBiome((int)Math.Floor(mux + 0.5), (int)Math.Floor(muy + 0.5));
-                    chunk.Biomes.SetBiome(x, z, biomeID);
+                    int biome = currentDwarfMap.getBiome(xCod, yCod);
+                    chunk.Biomes.SetBiome(x, z, biome);
                     //create bedrock
                     for (int y = 0; y < 2; y++)
                     {
                         chunk.Blocks.SetID(x, y, z, BlockType.BEDROCK);
                     }
-                    ////deal with rivers
-                    //if (riverLevel >= 0)
-                    //{
-                    //    chunk.Biomes.SetBiome(x, z, BiomeType.River);
-                    //    height = riverLevel;
-                    //    for (int y = 0; y < height - 2; y++)
-                    //    {
-                    //        chunk.Blocks.SetID(x, y, z, BlockType.STONE);
-                    //    }
-                    //    for (int y = height - 2; y < height - 1; y++)
-                    //    {
-                    //        chunk.Blocks.SetID(x, y, z, BlockType.GRAVEL);
-                    //    }
-                    //    for (int y = height - 1; y < height; y++)
-                    //    {
-                    //        chunk.Blocks.SetID(x, y, z, BlockType.WATER);
-                    //    }
-                    //}
-                    //else if (BiomeList.biomes[biomeIndex].mineCraftBiome == BiomeID.DeepOcean && waterLevel <= height)
-                    //{
-                    //    //make beaches
-                    //    chunk.Biomes.SetBiome(x, z, BiomeType.Beach);
-                    //    height = 98 + shift;
-                    //    for (int y = 0; y < height - 4; y++)
-                    //    {
-                    //        chunk.Blocks.SetID(x, y, z, BlockType.STONE);
-                    //    }
-                    //    for (int y = height - 4; y < height - 3; y++)
-                    //    {
-                    //        chunk.Blocks.SetID(x, y, z, BlockType.SANDSTONE);
-                    //    }
-                    //    for (int y = height - 3; y < height; y++)
-                    //    {
-                    //        chunk.Blocks.SetID(x, y, z, BlockType.SAND);
-                    //    }
-
-                    //}
-                    //else
-                    //{
-                    //    // Create the rest, according to biome
-                    //    for (int y = 2; y < height; y++)
-                    //    {
-                    //        if (y >= chunk.Blocks.YDim) break;
-                    //        chunk.Blocks.SetID(x, y, z, BiomeList.biomes[biomeIndex].getBlockID(height - y, x + (chunk.X * 16), z + (chunk.Z * 16)));
-                    //    }
-                    //}
-                    //// Create Oceans and lakes
-                    //for (int y = height; y < waterLevel; y++)
-                    //{
-                    //    if (y < 2) continue;
-                    //    if (y >= chunk.Blocks.YDim) break;
-                    //    chunk.Blocks.SetID(x, y, z, BlockType.STATIONARY_WATER);
-                    //}
+                    //deal with rivers
+                    if (riverLevel >= 0)
+                    {
+                        chunk.Biomes.SetBiome(x, z, BiomeType.River);
+                        height = riverLevel;
+                        for (int y = 0; y < height - 2; y++)
+                        {
+                            chunk.Blocks.SetID(x, y, z, BlockType.STONE);
+                        }
+                        for (int y = height - 2; y < height - 1; y++)
+                        {
+                            chunk.Blocks.SetID(x, y, z, BlockType.GRAVEL);
+                        }
+                        for (int y = height - 1; y < height; y++)
+                        {
+                            chunk.Blocks.SetID(x, y, z, BlockType.WATER);
+                        }
+                        for (int y = height; y < height + 1; y++)//Just to blockupdate for flowing water(falls).
+                        {
+                            chunk.Blocks.SetID(x, y, z, BlockType.AIR);
+                        }
+                    }
+                    else if ((biome == BiomeID.DeepOcean || biome == BiomeID.KelpForest 
+                            || biome == BiomeID.CoralReef || biome == BiomeID.OceanOilField 
+                            || biome == BiomeID.Ocean)  && waterLevel <= height)
+                    {
+                        //make beaches
+                        chunk.Biomes.SetBiome(x, z, BiomeType.Beach);
+                        height = 98 + shift;
+                        for (int y = 0; y < height - 4; y++)
+                        {
+                            chunk.Blocks.SetID(x, y, z, BlockType.STONE);
+                        }
+                        for (int y = height - 4; y < height - 3; y++)
+                        {
+                            chunk.Blocks.SetID(x, y, z, BlockType.SANDSTONE);
+                        }
+                        for (int y = height - 3; y < height; y++)
+                        {
+                            chunk.Blocks.SetID(x, y, z, BlockType.SAND);
+                        }
+                    }
+                    else
+                    {
+                        // Create the rest, according to biome
+                        for (int y = 2; y < height; y++)
+                        {
+                            if (y >= chunk.Blocks.YDim) break;
+                            chunk.Blocks.SetID(x, y, z, currentDwarfMap.getBiomeConversion(xCod, yCod).getBlockID(height - y, x + (chunk.X * 16), z + (chunk.Z * 16)));
+                        }
+                    }
+                    // Create Oceans and lakes
+                    for (int y = height; y < waterLevel; y++)
+                    {
+                        if (y < 2) continue;
+                        if (y >= chunk.Blocks.YDim) break;
+                        chunk.Blocks.SetID(x, y, z, BlockType.STATIONARY_WATER);
+                    }
 
                     // Fill caves
                     for (int y = 2; y < height; y++)

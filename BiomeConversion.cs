@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Substrate;
+using System;
 using System.Drawing;
 
 namespace DwarvenRealms
@@ -14,18 +15,20 @@ namespace DwarvenRealms
         private Color colorKey;
         private int minecraftBiomeType;
         private int minecraftBiome = 255;
-        //OLD STUFF
-        /*int[] layer1ID;
+        //Layers of stuff.
+        int[] layer1ID;
         int layer1Thickness;
         int[] layer2ID;
         int layer2Thickness;
         int[] layer3ID;
         int layer3Thickness;
-        int[] layer4ID;*/
+        int[] layer4ID;
+
         public BiomeConversion()
         {
             colorKey = Color.FromArgb(0, 0, 0);
             minecraftBiomeType = BiomeID.WaterType;
+            minecraftBiome = BiomeID.DeepOcean;
         }
         public BiomeConversion(Color color, int biometype)
         {
@@ -37,17 +40,7 @@ namespace DwarvenRealms
             colorKey = Color.FromArgb(red, green, blue);
             minecraftBiomeType = biometype;
         }
-        public BiomeConversion(Color color, int biometype, int temperatureMod = 0, int vegetationMod = 0, int volcanismMod = 0, int evilnessMod = 0, bool river = false)
-        {
-            colorKey = color;
-            minecraftBiomeType = biometype;
-            modTemperature += temperatureMod;
-            modVegetation += vegetationMod;
-            modVolcanism += volcanismMod;
-            modEvilness += evilnessMod;
-            modRiver = river;
-        }
-        public BiomeConversion(int red, int green, int blue, int biometype, int temperatureMod = 0, int vegetationMod = 0, int volcanismMod = 0, int evilnessMod = 0, bool river = false)
+        public BiomeConversion(int red, int green, int blue, int biometype, int temperatureMod, int vegetationMod, int volcanismMod, int evilnessMod, bool river = false)
         {
             colorKey = Color.FromArgb(red, green, blue);
             minecraftBiomeType = biometype;
@@ -56,6 +49,45 @@ namespace DwarvenRealms
             modVolcanism += volcanismMod;
             modEvilness += evilnessMod;
             modRiver = river;
+
+            if (isRiver())
+            {
+                layer1ID = new int[] { BlockType.GRAVEL, BlockType.SAND, BlockType.DIRT, BlockType.DIRT, BlockType.CLAY_BLOCK };
+                layer1Thickness = 1;
+                layer2ID = new int[] { BlockType.DIRT };
+                layer2Thickness = 3;
+            }
+        }
+
+        public BiomeConversion(int red, int green, int blue, int biometype, int temperatureMod, int vegetationMod, int volcanismMod, int evilnessMod,
+            int[] lay1ID = null, int lay1thick = 0,
+            int[] lay2ID = null, int lay2thick = 0,
+            int[] lay3ID = null, int lay3thick = 0,
+            int[] lay4ID = null)
+        {
+            colorKey = Color.FromArgb(red, green, blue);
+            minecraftBiomeType = biometype;
+            modTemperature += temperatureMod;
+            modVegetation += vegetationMod;
+            modVolcanism += volcanismMod;
+            modEvilness += evilnessMod;
+
+            if (lay1ID != null)
+                layer1ID = lay1ID; 
+            else layer1ID = new int[] { 1 };
+            layer1Thickness = lay1thick;
+            if (lay2ID != null)
+                layer2ID = lay2ID;
+            else layer2ID = new int[] { 1 };
+            layer2Thickness = lay1thick + lay2thick;
+            if (lay3ID != null)
+                layer3ID = lay3ID;
+            else layer3ID = new int[] { 1 };
+            layer3Thickness = lay1thick + lay2thick + lay3thick;
+            if (lay4ID != null)
+                layer4ID = lay4ID;
+            else layer4ID = new int[] { 1 };
+        
         }
 
         //Biome Gets n' Sets
@@ -145,6 +177,41 @@ namespace DwarvenRealms
             minecraftBiome = biomeids.BGroupALL[a][b][c];
             return biomeids.BGroupALL[a][b][c];
         }
+        //Ensuring special changes are made to layers once biome has been selected.
+        public void setNewLayers()
+        {
+            //I'll get around to finishing this, eventually.
+            if (minecraftBiome == BiomeID.Volcano)
+            {
+                layer1ID = new int[] { BlockType.STONE, BlockType.STONE, BlockType.STONE, BlockType.OBSIDIAN };
+                layer1Thickness = 3;
+                layer2ID = new int[] { BlockType.STONE, BlockType.OBSIDIAN };
+                layer2Thickness = 3;
+            }
+            else if (minecraftBiome == BiomeID.Crag)
+            {
+                layer1ID = new int[] { BlockType.STONE, BlockType.STONE, BlockType.COBBLESTONE, BlockType.COBBLESTONE };
+                layer1Thickness = 3;
+            }
+            else if (minecraftBiome == BiomeID.MushroomIsland || minecraftBiome == BiomeID.MushroomIslandShore)
+            {
+                layer1ID = new int[] { BlockType.MYCELIUM };
+            }
+            else if (minecraftBiome == BiomeID.FungiForest)
+            {
+                layer1ID = new int[] { BlockType.GRASS, BlockType.GRASS, BlockType.GRASS, BlockType.MYCELIUM };
+            }
+            else if (minecraftBiome == BiomeID.Mesa || minecraftBiome == BiomeID.MesaBryce)
+            {
+                layer1ID = new int[] { BlockType.STAINED_CLAY };
+                layer1Thickness = 2;
+                layer2ID = new int[] { BlockType.STAINED_CLAY };
+                layer2Thickness = 3;
+                layer3ID = new int[] { BlockType.STAINED_CLAY };
+                layer3Thickness = 5;
+            }            
+        }
+
 
         //Some basic Gets n' Sets
         public bool isRiver()
@@ -180,7 +247,11 @@ namespace DwarvenRealms
                 minecraftBiomeType = type % 7;
         }
 
-
+        //Class manipulations.
+        public bool colMatches(Color a)
+        {
+            return a.R == colorKey.R && a.G == colorKey.G && a.B == colorKey.B;
+        }
         public void copy(BiomeConversion copy)
         {
             setRiver(copy.isRiver());
@@ -192,28 +263,17 @@ namespace DwarvenRealms
             modVegetation = copy.modVegetation;
             modVolcanism = copy.modVolcanism;
             modEvilness = copy.modEvilness;
+
+            layer1ID = copy.layer1ID;
+            layer1Thickness = copy.layer1Thickness;
+            layer2ID = copy.layer2ID;
+            layer2Thickness = copy.layer2Thickness;
+            layer3ID = copy.layer3ID;
+            layer3Thickness = copy.layer3Thickness;
+            layer4ID = copy.layer4ID;
         }
-
-
-
-            //OLD STUFF
-            /*if (lay1ID != null)
-                layer1ID = lay1ID;
-            else layer1ID = new int[] { 1 };
-            layer1Thickness = lay1thick;
-            if (lay2ID != null)
-                layer2ID = lay2ID;
-            else layer2ID = new int[] { 1 };
-            layer2Thickness = lay1thick + lay2thick;
-            if (lay3ID != null)
-                layer3ID = lay3ID;
-            else layer3ID = new int[] { 1 };
-            layer3Thickness = lay1thick + lay2thick + lay3thick;
-            if (lay4ID != null)
-                layer4ID = lay4ID;
-            else layer4ID = new int[] { 1 };
-        }
-        //OLD STUFF
+        
+        //Layer Stuff
         public int getBlockID(int depth, float x = 0, float y = 0)
         {
             x /= 8.0f;
@@ -258,10 +318,6 @@ namespace DwarvenRealms
                 rando *= layer4ID.Length;
                 return layer4ID[(int)Math.Floor(rando)];
             }
-        }*/
-        public bool colMatches(Color a)
-        {
-            return a.R == colorKey.R && a.G == colorKey.G && a.B == colorKey.B;
         }
     }
 }
